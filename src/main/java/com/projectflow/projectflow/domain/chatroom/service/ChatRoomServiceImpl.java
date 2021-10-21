@@ -39,7 +39,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
 
         ChatRoom unsavedChatRoom = buildChatRoom(request, user, project.getLogoImage());
-        System.out.println("sdsfadf");
         ChatRoom chatRoom = chatRoomRepository.save(unsavedChatRoom);
 
         project.getChatRooms().add(chatRoom);
