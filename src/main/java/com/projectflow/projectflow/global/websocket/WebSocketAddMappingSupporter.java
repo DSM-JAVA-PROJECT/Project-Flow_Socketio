@@ -2,23 +2,18 @@ package com.projectflow.projectflow.global.websocket;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.projectflow.projectflow.domain.chat.service.ChatService;
 import com.projectflow.projectflow.global.websocket.annotations.SocketController;
 import com.projectflow.projectflow.global.websocket.annotations.SocketMapping;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Order(Ordered.HIGHEST_PRECEDENCE + 10)
 @RequiredArgsConstructor
 @Component
 public class WebSocketAddMappingSupporter {
