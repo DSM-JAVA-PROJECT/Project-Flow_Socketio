@@ -1,6 +1,7 @@
 package com.projectflow.projectflow.global.websocket;
 
 import com.corundumstudio.socketio.SocketIOServer;
+import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;

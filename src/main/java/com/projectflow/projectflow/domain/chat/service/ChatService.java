@@ -3,10 +3,11 @@ package com.projectflow.projectflow.domain.chat.service;
 import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
 import com.projectflow.projectflow.domain.chat.payload.OldChatMessageListResponse;
+import com.projectflow.projectflow.domain.user.entity.User;
 import org.springframework.data.domain.Pageable;
 
 public interface ChatService {
-    Chat saveMessage(String chatRoomId, ChatRequest request);
+    Chat saveMessage(ChatRequest request, User user);
 
     String removeMessage(String chatId);
 

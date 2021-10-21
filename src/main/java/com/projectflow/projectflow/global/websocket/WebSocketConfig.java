@@ -5,6 +5,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
+import com.projectflow.projectflow.global.websocket.security.WebSocketConnectController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,8 @@ import javax.annotation.PreDestroy;
 @Component
 public class WebSocketConfig {
 
-//    private SocketIOServer server;
     private final WebSocketAddMappingSupporter mappingSupporter;
+    private final WebSocketConnectController connectController;
 
     @Value("${socket.port}")
     private Integer port;
@@ -29,6 +30,7 @@ public class WebSocketConfig {
         config.setOrigin("*");
         SocketIOServer server = new SocketIOServer(config);
         mappingSupporter.addListeners(server);
+        server.addConnectListener(connectController::onConnect);
         return server;
     }
 

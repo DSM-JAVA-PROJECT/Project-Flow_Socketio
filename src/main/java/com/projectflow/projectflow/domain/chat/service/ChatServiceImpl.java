@@ -29,11 +29,9 @@ public class ChatServiceImpl implements ChatService {
     private final AuthenticationFacade authenticationFacade;
 
     @Override
-    public Chat saveMessage(String chatRoomId, ChatRequest request) {
-        User user = authenticationFacade.getCurrentUser();
-
-        validateChatRoom(chatRoomId, user);
-        ChatRoom chatRoom = findChatRoomById(chatRoomId);
+    public Chat saveMessage(ChatRequest request, User user) {
+        validateChatRoom(request.getChatRoomId(), user);
+        ChatRoom chatRoom = findChatRoomById(request.getChatRoomId());
 
         List<User> receivers = chatRoom.getUserIds();
         receivers.remove(user);
