@@ -4,7 +4,6 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.global.websocket.annotations.Payload;
 import com.projectflow.projectflow.global.websocket.annotations.SocketMapping;
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -29,11 +28,11 @@ public record WebSocketMappingArgumentResolver(
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        Class<?> payload = getPayloadClass(parameter);
-
         Method method = parameter.getMethod();
+        Class<?> payload = getPayloadClass(method);
 
         SocketMapping payloadAnnotation = parameter.getMethodAnnotation(SocketMapping.class);
+
         String endpoint = payloadAnnotation.endpoint();
 
         socketIOServer.addEventListener(endpoint, payload, ((client, data, ackSender) ->
@@ -41,8 +40,8 @@ public record WebSocketMappingArgumentResolver(
         return socketIOServer;
     }
 
-    private Class<?> getPayloadClass(MethodParameter parameter) {
-        return Arrays.stream(parameter.getMethod().getParameterTypes())                     // 전체 파라미터들 조회
+    private Class<?> getPayloadClass(Method method) {
+        return Arrays.stream(method.getParameterTypes())                     // 전체 파라미터들 조회
                 .filter(aClass -> aClass.isAnnotationPresent(Payload.class))                // Payload 어노테이션이 붙어있는지 검사
                 .findFirst()                                                                // 하나 반환
                 .orElse(null);                                                        // 없으면 null
@@ -50,10 +49,10 @@ public record WebSocketMappingArgumentResolver(
 
     private void invokeServiceMethod(Method method, SocketIOClient client, Object data) throws InvocationTargetException, IllegalAccessException {
         List<Object> args = new ArrayList<>();
-        for (Class<?> params : method.getParameterTypes()) {
-            if (params.equals(SocketIOServer.class)) args.add(socketIOServer);
-            else if (params.equals(SocketIOClient.class)) args.add(client);
-            else if (params.equals(Payload.class)) args.add(data);
+        for (Class<?> params : method.getParameterTypes()) {                        // Controller 메소드의 파라미터들
+            if (params.equals(SocketIOServer.class)) args.add(socketIOServer);      // SocketIOServer 면 주입
+            else if (params.equals(SocketIOClient.class)) args.add(client);         // 마찬가지
+            else if (params.getAnnotation(Payload.class).annotationType().equals(Payload.class)) args.add(data);
         }
         method.invoke(method, args.toArray());
     }
