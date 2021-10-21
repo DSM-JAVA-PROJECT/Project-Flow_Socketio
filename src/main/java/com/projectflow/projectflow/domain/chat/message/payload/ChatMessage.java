@@ -1,5 +1,7 @@
-package com.projectflow.projectflow.domain.chat.message;
+package com.projectflow.projectflow.domain.chat.message.payload;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,10 +23,9 @@ public class ChatMessage {
 
     private String senderImage;
 
-    private boolean isMine;
-
     private List<String> readerList;
 
-    private LocalDateTime cratedAt;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime createdAt;
 
 }
