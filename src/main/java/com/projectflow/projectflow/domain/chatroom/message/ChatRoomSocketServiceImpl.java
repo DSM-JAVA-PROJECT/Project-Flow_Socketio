@@ -27,6 +27,11 @@ public class ChatRoomSocketServiceImpl implements ChatRoomSocketService {
     }
 
     @Override
+    public void rejoinChatRoom(String chatRoomId, SocketIOClient client) {
+        client.joinRoom(chatRoomId);
+    }
+
+    @Override
     public void resignChatRoom(String chatRoomId, User user, SocketIOClient client, SocketIOServer server) {
         client.leaveRoom(chatRoomId);
 

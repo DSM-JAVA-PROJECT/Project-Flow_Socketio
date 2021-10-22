@@ -35,6 +35,11 @@ public class ChatRoomController {
         socketService.joinChatRoom(request.getChatRoomId(), user, client, server);
     }
 
+    @SocketMapping(endpoint = "chatroom.rejoin", requestCls = JoinChatRoomRequest.class)
+    public void rejoinChatRoom(JoinChatRoomRequest request, SocketIOClient client) {
+        socketService.rejoinChatRoom(request.getChatRoomId(), client);
+    }
+
     @SocketMapping(endpoint = "chatroom.resign", requestCls = ResignChatRoomRequest.class)
     public void resign(ResignChatRoomRequest request, SocketIOClient client, SocketIOServer server) {
         User user = authenticationFacade.getCurrentUser(client);
