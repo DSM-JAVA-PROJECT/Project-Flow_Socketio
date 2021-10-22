@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  color:
+    build: .
+    container_name: project-flow
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - MONGO_URL=${MONGO_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - RABBIT_PORT=${RABBIT_PORT}
+      - RABBIT_USERNAME=${RABBIT_USERNAME}
+      - RABBIT_PASSWORD=${RABBIT_PASSWORD}
+      - RABBIT_HOST=${RABBIT_HOST}
