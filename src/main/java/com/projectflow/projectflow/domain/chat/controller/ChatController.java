@@ -27,5 +27,4 @@ public class ChatController {
         socketService.sendChatMessage(chat, user, server);
     }
 
-
 }

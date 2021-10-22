@@ -5,6 +5,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.chatroom.message.ChatRoomSocketService;
 import com.projectflow.projectflow.domain.chatroom.payload.CreateChatRoomRequest;
 import com.projectflow.projectflow.domain.chatroom.payload.JoinChatRoomRequest;
+import com.projectflow.projectflow.domain.chatroom.payload.ResignChatRoomRequest;
 import com.projectflow.projectflow.domain.chatroom.service.ChatRoomService;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.annotations.SocketController;
@@ -34,11 +35,11 @@ public class ChatRoomController {
         socketService.joinChatRoom(request.getChatRoomId(), user, client, server);
     }
 
-//    @MessageMapping("/resign/chatroom/{chatRoomId}")
-//    public int resign(@DestinationVariable String chatRoomId) {
-//        chatRoomService.resignChatRoom(chatRoomId);
-//        messageService.sendResignMessage(chatRoomId);
-//        return 200;
-//    }
+    @SocketMapping(endpoint = "chatroom.resign", requestCls = ResignChatRoomRequest.class)
+    public void resign(ResignChatRoomRequest request, SocketIOClient client, SocketIOServer server) {
+        User user = authenticationFacade.getCurrentUser(client);
+        chatRoomService.resignChatRoom(request.getChatRoomId(), user);
+        socketService.resignChatRoom(request.getChatRoomId(), user, client, server);
+    }
 
 }
