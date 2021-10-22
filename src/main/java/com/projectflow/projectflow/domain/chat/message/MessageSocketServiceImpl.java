@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class MessageServiceImpl implements MessageService {
+public class MessageSocketServiceImpl implements MessageSocketService {
 
     @Override
     public void sendChatMessage(Chat chat, User user, SocketIOServer server) {

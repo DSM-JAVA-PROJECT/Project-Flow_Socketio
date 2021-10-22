@@ -3,7 +3,7 @@ package com.projectflow.projectflow.domain.chat.controller;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.chat.entity.Chat;
-import com.projectflow.projectflow.domain.chat.message.MessageService;
+import com.projectflow.projectflow.domain.chat.message.MessageSocketService;
 import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
 import com.projectflow.projectflow.domain.chat.service.ChatService;
 import com.projectflow.projectflow.domain.user.entity.User;
@@ -18,13 +18,13 @@ public class ChatController {
 
     private final ChatService chatService;
     private final SocketAuthenticationFacade authenticationFacade;
-    private final MessageService messageService;
+    private final MessageSocketService socketService;
 
     @SocketMapping(endpoint = "message", requestCls = ChatRequest.class)
     public void sendMessage(SocketIOClient client, SocketIOServer server, ChatRequest request) {
         User user = authenticationFacade.getCurrentUser(client);
         Chat chat = chatService.saveMessage(request, user);
-        messageService.sendChatMessage(chat, user, server);
+        socketService.sendChatMessage(chat, user, server);
     }
 
 

@@ -45,9 +45,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public String joinChatRoom(String chatRoomId, User user) {
+    public void joinChatRoom(String chatRoomId, User user) {
         validateNotChatRoomMember(chatRoomId, user);
-        return chatRoomRepository.joinChatRoom(chatRoomId, user);
+        chatRoomRepository.joinChatRoom(chatRoomId, user);
     }
 
     @Override
