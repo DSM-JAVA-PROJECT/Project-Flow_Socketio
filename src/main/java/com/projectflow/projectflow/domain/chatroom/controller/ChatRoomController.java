@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.swing.plaf.PanelUI;
+
 @RequiredArgsConstructor
 @SocketController
 public class ChatRoomController {
@@ -53,7 +55,7 @@ public class ChatRoomController {
 
     @GetMapping("/{projectId}/rooms")
     @ResponseBody
-    private ChatRoomListResponse getChatRoom(@PathVariable String projectId) {
+    public ChatRoomListResponse getChatRoom(@PathVariable String projectId) {
         return chatRoomService.getChatRooms(projectId);
     }
 
