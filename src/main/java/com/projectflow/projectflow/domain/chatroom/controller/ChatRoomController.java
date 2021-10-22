@@ -3,6 +3,7 @@ package com.projectflow.projectflow.domain.chatroom.controller;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.chatroom.message.ChatRoomSocketService;
+import com.projectflow.projectflow.domain.chatroom.payload.ChatRoomListResponse;
 import com.projectflow.projectflow.domain.chatroom.payload.CreateChatRoomRequest;
 import com.projectflow.projectflow.domain.chatroom.payload.JoinChatRoomRequest;
 import com.projectflow.projectflow.domain.chatroom.payload.ResignChatRoomRequest;
@@ -12,6 +13,8 @@ import com.projectflow.projectflow.global.websocket.annotations.SocketController
 import com.projectflow.projectflow.global.websocket.annotations.SocketMapping;
 import com.projectflow.projectflow.global.websocket.security.SocketAuthenticationFacade;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RequiredArgsConstructor
 @SocketController
@@ -45,6 +48,11 @@ public class ChatRoomController {
         User user = authenticationFacade.getCurrentUser(client);
         chatRoomService.resignChatRoom(request.getChatRoomId(), user);
         socketService.resignChatRoom(request.getChatRoomId(), user, client, server);
+    }
+
+    @GetMapping("/{projectId}/rooms")
+    private ChatRoomListResponse getChatRoom(@PathVariable String projectId) {
+        return chatRoomService.getChatRooms(projectId);
     }
 
 }

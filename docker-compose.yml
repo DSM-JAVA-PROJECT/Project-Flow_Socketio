@@ -10,3 +10,4 @@ services:
     environment:
       - MONGO_URL=${MONGO_URL}
       - SECRET_KEY=${SECRET_KEY}
+      - SOCKET_PORT=${SOCKET_PORT}
