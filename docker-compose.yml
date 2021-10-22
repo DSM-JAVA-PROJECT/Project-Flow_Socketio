@@ -10,7 +10,3 @@ services:
     environment:
       - MONGO_URL=${MONGO_URL}
       - SECRET_KEY=${SECRET_KEY}
-      - RABBIT_PORT=${RABBIT_PORT}
-      - RABBIT_USERNAME=${RABBIT_USERNAME}
-      - RABBIT_PASSWORD=${RABBIT_PASSWORD}
-      - RABBIT_HOST=${RABBIT_HOST}

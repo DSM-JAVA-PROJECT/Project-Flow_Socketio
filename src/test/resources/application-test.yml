@@ -5,10 +5,5 @@ spring:
       authentication-database: admin
       uri: l0calhost
       database: project-fl0w
-rabbitmq:
-  port: 5672
-  username: guest
-  password: Guest
-  host: 27017
 jwt:
   secret: sadfsdfasdfasdfsdf
