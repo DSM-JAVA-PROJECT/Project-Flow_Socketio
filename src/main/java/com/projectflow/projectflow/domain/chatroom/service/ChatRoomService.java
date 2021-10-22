@@ -2,10 +2,11 @@ package com.projectflow.projectflow.domain.chatroom.service;
 
 import com.projectflow.projectflow.domain.chatroom.payload.ChatRoomListResponse;
 import com.projectflow.projectflow.domain.chatroom.payload.CreateChatRoomRequest;
+import com.projectflow.projectflow.domain.user.entity.User;
 
 public interface ChatRoomService {
-    void createChatRoom(String projectId, CreateChatRoomRequest request);
-    String joinChatRoom(String chatRoomId);
-    void resignChatRoom(String chatRoomId);
+    void createChatRoom(CreateChatRoomRequest request, User user);
+    String joinChatRoom(String chatRoomId, User user);
+    void resignChatRoom(String chatRoomId, User user);
     ChatRoomListResponse getChatRooms(String projectId);
 }

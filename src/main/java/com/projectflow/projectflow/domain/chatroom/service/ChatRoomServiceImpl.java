@@ -12,7 +12,7 @@ import com.projectflow.projectflow.domain.project.entity.Project;
 import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
 import com.projectflow.projectflow.domain.project.exceptions.ProjectNotFoundException;
 import com.projectflow.projectflow.domain.user.entity.User;
-import com.projectflow.projectflow.global.auth.facade.AuthenticationFacade;
+import com.projectflow.projectflow.domain.user.entity.facade.UserFacade;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -27,15 +27,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ProjectRepository projectRepository;
-    private final AuthenticationFacade authenticationFacade;
+    private final UserFacade userFacade;
 
     @Transactional
     @Override
-    public void createChatRoom(String projectId, CreateChatRoomRequest request) {
-        User user = authenticationFacade.getCurrentUser();
-        validateProjectMember(projectId, user);
+    public void createChatRoom(CreateChatRoomRequest request, User user) {
+        validateProjectMember(request.getProjectId(), user);
 
-        Project project = projectRepository.findById(new ObjectId(projectId))
+        Project project = projectRepository.findById(new ObjectId(request.getProjectId()))
                 .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
 
         ChatRoom unsavedChatRoom = buildChatRoom(request, user, project.getLogoImage());
@@ -46,15 +45,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public String joinChatRoom(String chatRoomId) {
-        User user = authenticationFacade.getCurrentUser();
+    public String joinChatRoom(String chatRoomId, User user) {
         validateNotChatRoomMember(chatRoomId, user);
         return chatRoomRepository.joinChatRoom(chatRoomId, user);
     }
 
     @Override
-    public void resignChatRoom(String chatRoomId) {
-        User user = authenticationFacade.getCurrentUser();
+    public void resignChatRoom(String chatRoomId, User user) {
         validateChatRoomMember(chatRoomId, user);
         chatRoomRepository.deleteMember(chatRoomId, user);
     }
@@ -75,8 +72,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     private ChatRoom buildChatRoom(CreateChatRoomRequest request, User authUser, String image) {
-        List<User> users = request.getEmails().stream()
-                .map(authenticationFacade::getUser)
+        List<User> users = request.getUserIds().stream()
+                .map(userFacade::getUserById)
                 .collect(Collectors.toList());
         users.add(authUser);
 

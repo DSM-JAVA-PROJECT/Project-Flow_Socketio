@@ -1,22 +1,29 @@
-//package com.projectflow.projectflow.domain.chatroom.controller;
-//
-//import com.projectflow.projectflow.domain.chatroom.service.ChatRoomService;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//@RequiredArgsConstructor
-//@RestController
-//public class ChatRoomController {
-//
-//    private final ChatRoomService chatRoomService;
-//
-//    @MessageMapping("/create/chatroom/{projectId}")
-//    public int createChatRoom(@DestinationVariable String projectId,
-//                              @Payload Message<CreateChatRoomRequest> request) {
-//        chatRoomService.createChatRoom(projectId, request.getPayload());
-//        return 201;
-//    }
-//
+package com.projectflow.projectflow.domain.chatroom.controller;
+
+import com.corundumstudio.socketio.SocketIOClient;
+import com.corundumstudio.socketio.SocketIOServer;
+import com.projectflow.projectflow.domain.chatroom.payload.CreateChatRoomRequest;
+import com.projectflow.projectflow.domain.chatroom.service.ChatRoomService;
+import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.global.websocket.annotations.SocketController;
+import com.projectflow.projectflow.global.websocket.annotations.SocketMapping;
+import com.projectflow.projectflow.global.websocket.security.SocketAuthenticationFacade;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@SocketController
+public class ChatRoomController {
+
+    private final ChatRoomService chatRoomService;
+    private final SocketAuthenticationFacade authenticationFacade;
+
+    @SocketMapping(endpoint = "chatroom.create", requestCls = CreateChatRoomRequest.class)
+    public void createChatRoom(SocketIOClient client, SocketIOServer server, CreateChatRoomRequest request) {
+        User user = authenticationFacade.getCurrentUser(client);
+        chatRoomService.createChatRoom(request, user);
+
+    }
+
 //    @MessageMapping("/join/chatroom/{chatRoomId}")
 //    public int joinChatRoom(@DestinationVariable String chatRoomId) {
 //        String roomId = chatRoomService.joinChatRoom(chatRoomId);
@@ -29,5 +36,5 @@
 //        messageService.sendResignMessage(chatRoomId);
 //        return 200;
 //    }
-//
-//}
+
+}

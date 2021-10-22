@@ -11,6 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CreateChatRoomRequest {
 
-    private List<String> emails;
+    private String projectId;
+
+    private List<String> userIds;
 
 }
