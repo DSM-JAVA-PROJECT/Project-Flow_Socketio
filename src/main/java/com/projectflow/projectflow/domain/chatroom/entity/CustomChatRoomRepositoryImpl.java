@@ -18,8 +18,8 @@ public class CustomChatRoomRepositoryImpl implements CustomChatRoomRepository {
     // TODO: 2021-09-17 프로젝트 레포지토리로 이동하렴
     @Override
     public boolean isProjectMember(User user, String projectId) {
-        return mongoTemplate.exists(query(where("id").is(projectId)
-                .andOperator(where("projectUsers").elemMatch(where("id").is(user.getId())))),
+        return mongoTemplate.exists(query(where("_id").is(projectId)
+                        .andOperator(where("projectUsers.userId").is(user.getId()))),
                 Project.class);
     }
 
