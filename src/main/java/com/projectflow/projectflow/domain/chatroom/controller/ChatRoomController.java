@@ -15,6 +15,7 @@ import com.projectflow.projectflow.global.websocket.security.SocketAuthenticatio
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @RequiredArgsConstructor
 @SocketController
@@ -51,6 +52,7 @@ public class ChatRoomController {
     }
 
     @GetMapping("/{projectId}/rooms")
+    @ResponseBody
     private ChatRoomListResponse getChatRoom(@PathVariable String projectId) {
         return chatRoomService.getChatRooms(projectId);
     }
