@@ -2,6 +2,7 @@ package com.projectflow.projectflow.global.websocket;
 
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.projectflow.projectflow.global.websocket.exception.SocketExceptionListener;
 import com.projectflow.projectflow.global.websocket.security.WebSocketConnectController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ public class WebSocketConfig {
 
     private final WebSocketAddMappingSupporter mappingSupporter;
     private final WebSocketConnectController connectController;
+    private final SocketExceptionListener exceptionListener;
 
     @Value("${socket.port}")
     private Integer port;
@@ -23,6 +25,7 @@ public class WebSocketConfig {
         Configuration config = new Configuration();
         config.setPort(port);
         config.setOrigin("*");
+        config.setExceptionListener(exceptionListener);
         SocketIOServer server = new SocketIOServer(config);
         mappingSupporter.addListeners(server);
         server.addConnectListener(connectController::onConnect);
