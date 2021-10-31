@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum SocketErrorCode {
 
-    JWT_VALIDATE_FAILED("Jwt Validate Failed", 401);
+    JWT_VALIDATE_FAILED("Jwt Validate Failed", 401),
+    TOKEN_EXPIRED("Jwt token expired", 401);
 
     private final String message;
     private final Integer status;
