@@ -17,7 +17,7 @@ public class WebSocketConnectController {
     private final JwtTokenValidator validator;
 
     public void onConnect(SocketIOClient client) {
-        String token = client.getHandshakeData().getHttpHeaders().get("Authorization");
+        String token = client.getHandshakeData().getSingleUrlParam("Authorization");
 
         try {
             Authentication authentication = validator.createAuthentication(token);
