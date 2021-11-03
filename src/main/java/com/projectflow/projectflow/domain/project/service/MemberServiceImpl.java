@@ -58,8 +58,8 @@ public class MemberServiceImpl implements MemberService {
 
     private ProjectMemberResponse buildMemberResponse(User user) {
         return ProjectMemberResponse.builder()
-                .email(user.getEmail())
                 .name(user.getName())
+                .id(user.getId().toString())
                 .profileImage(user.getProfileImage())
                 .build();
     }
@@ -68,4 +68,5 @@ public class MemberServiceImpl implements MemberService {
         return projectRepository.findById(new ObjectId(projectId))
                 .orElseThrow(() -> ProjectNotFoundException.EXCEPTION);
     }
+
 }
