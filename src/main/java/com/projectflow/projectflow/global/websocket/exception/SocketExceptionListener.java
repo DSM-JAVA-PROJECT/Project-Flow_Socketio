@@ -2,7 +2,8 @@ package com.projectflow.projectflow.global.websocket.exception;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.listener.ExceptionListener;
-import com.projectflow.projectflow.global.exception.SocketException;
+import com.projectflow.projectflow.global.exception.ErrorResponse;
+import com.projectflow.projectflow.global.exception.GlobalException;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ public class SocketExceptionListener implements ExceptionListener {
 
     @Override
     public void onEventException(Exception e, List<Object> args, SocketIOClient client) {
+        e.printStackTrace();
         runExceptionHandling(e, client);
     }
 
@@ -38,17 +40,17 @@ public class SocketExceptionListener implements ExceptionListener {
     }
 
     private void runExceptionHandling(Exception e, SocketIOClient client) {
-        final SocketExceptionResponse message;
+        final ErrorResponse message;
 
-        if (e instanceof SocketException exception) {
-            message = SocketExceptionResponse.builder()
+        if (e instanceof GlobalException exception) {
+            message = ErrorResponse.builder()
                     .message(exception.getErrorCode().getMessage())
                     .status(exception.getErrorCode().getStatus())
                     .build();
         } else {
-            message = SocketExceptionResponse.builder()
+            message = ErrorResponse.builder()
                     .status(500)
-                    .message("Unexpected Error")
+                    .message(e.getMessage())
                     .build();
         }
 
