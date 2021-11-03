@@ -19,8 +19,8 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/member/{chatRoomId}")
-    public ProjectMemberListResponse getProjectMember(@PathVariable String projectId,
-                                                      @PathVariable String chatRoomId) {
+    public ProjectMemberListResponse getNotChatRoomMemberList(@PathVariable String projectId,
+                                                              @PathVariable String chatRoomId) {
         return memberService.getNotParticipatedMemberList(projectId, chatRoomId);
     }
 }
