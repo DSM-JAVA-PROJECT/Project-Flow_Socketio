@@ -56,21 +56,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         chatRoomRepository.deleteMember(chatRoomId, user);
     }
 
-    @Override
-    public ChatRoomListResponse getChatRooms(String projectId) {
-        Project project = projectRepository.findById(new ObjectId(projectId))
-                .orElseThrow(() -> ProjectNotFoundException.EXCEPTION);
-
-        List<ChatRoomResponse> responses = project.getChatRooms()
-                .stream().map(chatRoom -> ChatRoomResponse.builder()
-                        .chatRoomImage(chatRoom.getProfileImage())
-                        .chatRoomName(chatRoom.getName())
-                        .id(chatRoom.getId().toString())
-                        .build())
-                .collect(Collectors.toList());
-        return new ChatRoomListResponse(responses);
-    }
-
     private ChatRoom buildChatRoom(CreateChatRoomRequest request, User authUser, String image) {
         List<User> users = request.getUserIds().stream()
                 .map(userFacade::getUserById)

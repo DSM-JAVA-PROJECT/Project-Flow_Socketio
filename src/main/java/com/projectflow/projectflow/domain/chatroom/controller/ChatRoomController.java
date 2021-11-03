@@ -3,10 +3,8 @@ package com.projectflow.projectflow.domain.chatroom.controller;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.chatroom.message.ChatRoomSocketService;
-import com.projectflow.projectflow.domain.chatroom.payload.ChatRoomListResponse;
-import com.projectflow.projectflow.domain.chatroom.payload.CreateChatRoomRequest;
-import com.projectflow.projectflow.domain.chatroom.payload.JoinChatRoomRequest;
-import com.projectflow.projectflow.domain.chatroom.payload.ResignChatRoomRequest;
+import com.projectflow.projectflow.domain.chatroom.payload.*;
+import com.projectflow.projectflow.domain.chatroom.service.ChatRoomRestService;
 import com.projectflow.projectflow.domain.chatroom.service.ChatRoomService;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.annotations.SocketController;
@@ -24,6 +22,7 @@ import javax.swing.plaf.PanelUI;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
+    private final ChatRoomRestService roomRestService;
     private final ChatRoomSocketService socketService;
     private final SocketAuthenticationFacade authenticationFacade;
 
@@ -53,10 +52,16 @@ public class ChatRoomController {
         socketService.resignChatRoom(request.getChatRoomId(), user, client, server);
     }
 
-    @GetMapping("/{projectId}/rooms")
+    @GetMapping("/chatroom/{projectId}/rooms")
     @ResponseBody
     public ChatRoomListResponse getChatRoom(@PathVariable String projectId) {
-        return chatRoomService.getChatRooms(projectId);
+        return roomRestService.getChatRooms(projectId);
+    }
+
+    @GetMapping("/chatroom/{chatRoomId}/members")
+    @ResponseBody
+    public ChatMemberListResponse getMembers(@PathVariable String chatRoomId) {
+        return roomRestService.getChatRoomMember(chatRoomId);
     }
 
 }
