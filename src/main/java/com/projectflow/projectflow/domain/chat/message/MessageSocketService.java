@@ -5,5 +5,5 @@ import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.user.entity.User;
 
 public interface MessageSocketService {
-    void sendChatMessage(Chat chat, User user, SocketIOServer server);
+    void sendChatMessage(Chat chat, String chatRoomId, User user, SocketIOServer server);
 }

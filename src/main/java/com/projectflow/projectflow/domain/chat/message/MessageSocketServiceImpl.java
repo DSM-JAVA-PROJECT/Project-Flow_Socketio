@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class MessageSocketServiceImpl implements MessageSocketService {
 
     @Override
-    public void sendChatMessage(Chat chat, User user, SocketIOServer server) {
+    public void sendChatMessage(Chat chat, String chatRoomId, User user, SocketIOServer server) {
         ChatMessage message = ChatMessage.builder()
                 .id(chat.getId().toString())
                 .createdAt(chat.getCreatedAt())
@@ -28,8 +28,7 @@ public class MessageSocketServiceImpl implements MessageSocketService {
                 .message(chat.getMessage())
                 .build();
 
-        System.out.println(chat.getChatRoom().getId().toString());
-        server.getBroadcastOperations()
+        server.getRoomOperations(chatRoomId)
                 .sendEvent("message", message);
     }
 }
