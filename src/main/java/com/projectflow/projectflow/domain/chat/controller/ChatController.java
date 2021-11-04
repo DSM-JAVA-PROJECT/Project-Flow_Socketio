@@ -24,7 +24,6 @@ public class ChatController {
     public void sendMessage(SocketIOClient client, SocketIOServer server, ChatRequest request) {
         User user = authenticationFacade.getCurrentUser(client);
         Chat chat = chatService.saveMessage(request, user);
-        socketService.sendChatMessage(chat, user, server);
+        socketService.sendChatMessage(chat, request.getChatRoomId(), user, server);
     }
-
 }

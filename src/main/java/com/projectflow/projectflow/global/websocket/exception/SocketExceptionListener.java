@@ -14,7 +14,6 @@ public class SocketExceptionListener implements ExceptionListener {
 
     @Override
     public void onEventException(Exception e, List<Object> args, SocketIOClient client) {
-        e.printStackTrace();
         runExceptionHandling(e, client);
     }
 
@@ -42,7 +41,7 @@ public class SocketExceptionListener implements ExceptionListener {
     private void runExceptionHandling(Exception e, SocketIOClient client) {
         final ErrorResponse message;
 
-        if (e instanceof GlobalException exception) {
+        if (e.getCause() instanceof GlobalException exception) {
             message = ErrorResponse.builder()
                     .message(exception.getErrorCode().getMessage())
                     .status(exception.getErrorCode().getStatus())
