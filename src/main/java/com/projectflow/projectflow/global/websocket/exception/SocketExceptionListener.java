@@ -47,9 +47,10 @@ public class SocketExceptionListener implements ExceptionListener {
                     .status(exception.getErrorCode().getStatus())
                     .build();
         } else {
+            Throwable test = e.getCause();
             message = ErrorResponse.builder()
                     .status(500)
-                    .message(e.getMessage())
+                    .message(e.getCause().getMessage())
                     .build();
         }
 
