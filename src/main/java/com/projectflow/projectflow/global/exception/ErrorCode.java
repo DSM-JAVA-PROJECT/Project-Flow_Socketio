@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum ErrorCode {
 
     AUTH_USER_NOT_FOUND(404, "Auth User Not Found"),
-    NOT_CHATROOM_MEMBER(403, "User Not Member of Project"),
+    NOT_CHATROOM_MEMBER(403, "User Not Member of Chatroom"),
     ALREADY_PARTICIPATE(409, "User Already Participated"),
     USER_NOT_FOUND(404, "User Not Found"),
     NOT_PROJECT_MEMBER(403, "Not Project Member"),
