@@ -54,7 +54,7 @@ public class ChatServiceImpl implements ChatService {
         User user = authenticationFacade.getCurrentUser();
         ChatRoom chatRoom = findChatRoomById(chatRoomId);
         return new OldChatMessageListResponse(
-                chatRepository.findAllByChatRoomOrderByCreatedAtDesc(chatRoom, pageable)
+                chatRepository.findAllByChatRoomOrderByCreatedAtAsc(chatRoom, pageable)
                         .map(chat -> {
                             chat.getReceiver().remove(user);
                             return chat;
