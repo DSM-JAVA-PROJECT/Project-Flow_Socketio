@@ -23,7 +23,7 @@ public class MessageSocketServiceImpl implements MessageSocketService {
                 .forEach(client -> {
                     ChatMessage message = ChatMessage.builder()
                             .id(chat.getId().toString())
-                            .createdAt(chat.getCreatedAt())
+                            .createdAt(chat.getCreatedAt().toString())
                             .readerList(chat.getReceiver().stream()
                                     .map(User::getId)
                                     .map(ObjectId::toString)

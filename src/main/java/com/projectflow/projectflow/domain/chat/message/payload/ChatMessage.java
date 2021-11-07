@@ -1,13 +1,10 @@
 package com.projectflow.projectflow.domain.chat.message.payload;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -27,7 +24,6 @@ public class ChatMessage {
 
     private boolean isMine;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime createdAt;
+    private String createdAt;
 
 }
