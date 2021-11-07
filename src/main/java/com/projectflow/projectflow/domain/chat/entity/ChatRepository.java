@@ -14,5 +14,5 @@ import java.util.Optional;
 public interface ChatRepository extends MongoRepository<Chat, ObjectId> {
     Optional<Chat> findByIdAndSender(ObjectId chatId, User user);
 
-    Page<Chat> findAllByChatRoomOrderByCreatedAtAsc(ChatRoom chatRoom, Pageable pageable);
+    Page<Chat> findAllByChatRoomOrderByCreatedAtDesc(ChatRoom chatRoom, Pageable pageable);
 }

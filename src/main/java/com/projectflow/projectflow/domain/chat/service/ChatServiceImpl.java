@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,13 +49,14 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    @Transactional
     public OldChatMessageListResponse getOldChatMessage(String chatRoomId, Pageable pageable) {
         User user = authenticationFacade.getCurrentUser();
         ChatRoom chatRoom = findChatRoomById(chatRoomId);
         return new OldChatMessageListResponse(
-                chatRepository.findAllByChatRoomOrderByCreatedAtAsc(chatRoom, pageable)
+                chatRepository.findAllByChatRoomOrderByCreatedAtDesc(chatRoom, pageable)
                         .map(chat -> {
-                            chat.getReceiver().remove(user);
+                            chat.getReceiver().removeIf(user1 -> user1.getEmail().equals(user.getEmail()));
                             return chat;
                         })
                         .map(chat -> buildResponse(chat, user)).getContent()
