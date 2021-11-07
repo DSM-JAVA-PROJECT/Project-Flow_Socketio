@@ -25,6 +25,8 @@ public class OldChatMessageResponse {
 
     private List<String> readerList;
 
-    private LocalDateTime cratedAt;
+    private LocalDateTime createdAt;
+
+
 
 }

@@ -63,7 +63,7 @@ public class ChatServiceImpl implements ChatService {
 
     private OldChatMessageResponse buildResponse(Chat chat, User user) {
         return OldChatMessageResponse.builder()
-                .cratedAt(chat.getCreatedAt())
+                .createdAt(chat.getCreatedAt())
                 .id(chat.getId().toString())
                 .isMine(user.equals(chat.getSender()))
                 .message(chat.getMessage())
