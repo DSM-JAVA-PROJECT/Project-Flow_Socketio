@@ -25,6 +25,8 @@ public class ChatMessage {
 
     private List<String> readerList;
 
+    private boolean isMine;
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createdAt;
 

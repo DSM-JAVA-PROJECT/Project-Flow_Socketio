@@ -15,6 +15,6 @@ public class WebSocketConnectController {
     public void onConnect(SocketIOClient client) {
         String token = client.getHandshakeData().getSingleUrlParam("Authorization");
         Authentication authentication = validator.createAuthentication(token);
-        client.set("userInfo", authentication.getName());
+        client.set(AuthenticationProperty.USER_KEY, authentication.getName());
     }
 }
