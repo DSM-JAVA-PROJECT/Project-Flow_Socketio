@@ -33,7 +33,7 @@ public class ChatController {
     }
 
     @ResponseBody
-    @GetMapping("/chat/{chatRoomId}/")
+    @GetMapping("/chat/{chatRoomId}")
     public OldChatMessageListResponse getOldMessage(@PathVariable String chatRoomId, Pageable pageable) {
         return chatService.getOldChatMessage(chatRoomId, pageable);
     }
