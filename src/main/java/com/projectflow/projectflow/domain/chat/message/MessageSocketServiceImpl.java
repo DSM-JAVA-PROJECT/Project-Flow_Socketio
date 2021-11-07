@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.message.payload.ChatMessage;
 import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.global.websocket.SocketProperty;
 import com.projectflow.projectflow.global.websocket.security.SocketAuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -32,7 +33,7 @@ public class MessageSocketServiceImpl implements MessageSocketService {
                             .message(chat.getMessage())
                             .isMine(authenticationFacade.getCurrentUser(client).getId().equals(user.getId()))
                             .build();
-                    client.sendEvent("message", message);
+                    client.sendEvent(SocketProperty.MESSAGE_KEY, message);
                 });
     }
 }

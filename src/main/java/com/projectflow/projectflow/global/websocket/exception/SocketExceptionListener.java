@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.listener.ExceptionListener;
 import com.projectflow.projectflow.global.exception.ErrorResponse;
 import com.projectflow.projectflow.global.exception.GlobalException;
+import com.projectflow.projectflow.global.websocket.SocketProperty;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +54,7 @@ public class SocketExceptionListener implements ExceptionListener {
                     .build();
         }
 
-        client.sendEvent("error", message);
+        client.sendEvent(SocketProperty.ERROR_KEY, message);
 
     }
 

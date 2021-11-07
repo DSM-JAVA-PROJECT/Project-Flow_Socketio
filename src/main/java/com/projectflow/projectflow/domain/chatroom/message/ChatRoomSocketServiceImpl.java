@@ -6,6 +6,7 @@ import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
 import com.projectflow.projectflow.domain.chatroom.message.payload.JoinMessage;
 import com.projectflow.projectflow.domain.chatroom.message.payload.ResignMessage;
 import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.global.websocket.SocketProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class ChatRoomSocketServiceImpl implements ChatRoomSocketService {
                 .build();
 
         server.getRoomOperations(chatRoomId)
-                .sendEvent("join", message);
+                .sendEvent(SocketProperty.JOIN_KEY, message);
     }
 
     @Override
@@ -43,6 +44,6 @@ public class ChatRoomSocketServiceImpl implements ChatRoomSocketService {
                 .build();
 
         server.getRoomOperations(chatRoomId)
-                .sendEvent("resign", message);
+                .sendEvent(SocketProperty.RESIGN_KEY, message);
     }
 }
