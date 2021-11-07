@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "email")
 @Document(collection = "user")
 public class User {
 

@@ -56,7 +56,7 @@ public class ChatServiceImpl implements ChatService {
         return new OldChatMessageListResponse(
                 chatRepository.findAllByChatRoomOrderByCreatedAtDesc(chatRoom, pageable)
                         .map(chat -> {
-                            chat.getReceiver().removeIf(user1 -> user1.getEmail().equals(user.getEmail()));
+                            chat.getReceiver().remove(user);
                             return chat;
                         })
                         .map(chat -> buildResponse(chat, user)).getContent()
