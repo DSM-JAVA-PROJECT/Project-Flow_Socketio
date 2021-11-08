@@ -51,13 +51,11 @@ public class ChatRoomController {
     }
 
     @GetMapping("/chatroom/{projectId}/rooms")
-    @ResponseBody
     public ChatRoomListResponse getChatRoom(@PathVariable String projectId) {
         return roomRestService.getChatRooms(projectId);
     }
 
     @GetMapping("/chatroom/{chatRoomId}/members")
-    @ResponseBody
     public ChatMemberListResponse getMembers(@PathVariable String chatRoomId) {
         return roomRestService.getChatRoomMember(chatRoomId);
     }

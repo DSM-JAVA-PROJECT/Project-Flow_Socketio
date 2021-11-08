@@ -32,7 +32,6 @@ public class ChatController {
         socketService.sendChatMessage(chat, request.getChatRoomId(), user, server);
     }
 
-    @ResponseBody
     @GetMapping("/chat/{chatRoomId}")
     public OldChatMessageListResponse getOldMessage(@PathVariable String chatRoomId, Pageable pageable) {
         return chatService.getOldChatMessage(chatRoomId, pageable);
