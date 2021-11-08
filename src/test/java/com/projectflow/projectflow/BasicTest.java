@@ -3,6 +3,8 @@ package com.projectflow.projectflow;
 import com.projectflow.projectflow.domain.chat.entity.ChatRepository;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoomRepository;
+import com.projectflow.projectflow.domain.plan.entity.CustomPlanRepository;
+import com.projectflow.projectflow.domain.plan.entity.CustomPlanRepositoryImpl;
 import com.projectflow.projectflow.domain.project.entity.Project;
 import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
 import com.projectflow.projectflow.domain.user.entity.User;
@@ -24,6 +26,8 @@ public abstract class BasicTest {
     @Autowired
     protected ChatRoomRepository chatRoomRepository;
 
+    protected CustomPlanRepository planRepository;
+
     @Autowired
     protected ProjectRepository projectRepository;
 
@@ -38,6 +42,7 @@ public abstract class BasicTest {
 
     @BeforeEach
     void setUp() {
+        this.planRepository = new CustomPlanRepositoryImpl(mongoTemplate);
         user = userRepository.save(
                 User.builder()
                         .email("email")
