@@ -3,14 +3,17 @@ package com.projectflow.projectflow.domain.chatroom.service;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoomRepository;
 import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
+import com.projectflow.projectflow.domain.chatroom.exceptions.NotProjectMemberException;
 import com.projectflow.projectflow.domain.chatroom.payload.ChatMemberListResponse;
 import com.projectflow.projectflow.domain.chatroom.payload.ChatMemberResponse;
 import com.projectflow.projectflow.domain.chatroom.payload.ChatRoomListResponse;
 import com.projectflow.projectflow.domain.chatroom.payload.ChatRoomResponse;
 import com.projectflow.projectflow.domain.project.entity.Project;
 import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
+import com.projectflow.projectflow.domain.project.entity.ProjectUser;
 import com.projectflow.projectflow.domain.project.exceptions.ProjectNotFoundException;
 import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.global.auth.facade.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ public class ChatRoomRestServiceImpl implements ChatRoomRestService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ProjectRepository projectRepository;
+    private final AuthenticationFacade authenticationFacade;
 
     @Override
     public ChatMemberListResponse getChatRoomMember(String chatRoomId) {
@@ -43,6 +47,8 @@ public class ChatRoomRestServiceImpl implements ChatRoomRestService {
         Project project = projectRepository.findById(new ObjectId(projectId))
                 .orElseThrow(() -> ProjectNotFoundException.EXCEPTION);
 
+        validateProjectMember(project);
+
         List<ChatRoomResponse> responses = project.getChatRooms()
                 .stream().map(chatRoom -> ChatRoomResponse.builder()
                         .chatRoomImage(chatRoom.getProfileImage())
@@ -51,6 +57,13 @@ public class ChatRoomRestServiceImpl implements ChatRoomRestService {
                         .build())
                 .collect(Collectors.toList());
         return new ChatRoomListResponse(responses);
+    }
+
+    private void validateProjectMember(Project project) {
+        User user = authenticationFacade.getCurrentUser();
+        if (!chatRoomRepository.isProjectMember(user, project.getId().toString())) {
+            throw NotProjectMemberException.EXCEPTION;
+        }
     }
 
 }

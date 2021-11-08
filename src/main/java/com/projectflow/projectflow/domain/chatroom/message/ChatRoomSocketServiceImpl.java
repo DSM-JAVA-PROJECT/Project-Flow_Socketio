@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.chatroom.message.payload.JoinMessage;
 import com.projectflow.projectflow.domain.chatroom.message.payload.ResignMessage;
+import com.projectflow.projectflow.domain.chatroom.payload.OutChatRoomRequest;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.SocketProperty;
 import org.springframework.stereotype.Service;
@@ -43,5 +44,10 @@ public class ChatRoomSocketServiceImpl implements ChatRoomSocketService {
 
         server.getRoomOperations(chatRoomId)
                 .sendEvent(SocketProperty.RESIGN_KEY, message);
+    }
+
+    @Override
+    public void outChatRoom(SocketIOClient client, OutChatRoomRequest request) {
+        client.leaveRoom(request.getChatRoomId());
     }
 }
