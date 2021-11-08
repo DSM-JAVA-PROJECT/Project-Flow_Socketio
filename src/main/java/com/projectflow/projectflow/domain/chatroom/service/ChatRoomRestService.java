@@ -5,5 +5,6 @@ import com.projectflow.projectflow.domain.chatroom.payload.ChatRoomListResponse;
 
 public interface ChatRoomRestService {
     ChatMemberListResponse getChatRoomMember(String chatRoomId);
+
     ChatRoomListResponse getChatRooms(String projectId);
 }

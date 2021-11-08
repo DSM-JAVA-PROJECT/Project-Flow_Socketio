@@ -1,5 +1,9 @@
 package com.projectflow.projectflow.global.websocket;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SocketProperty {
 
     public static final String MESSAGE_KEY = "message";

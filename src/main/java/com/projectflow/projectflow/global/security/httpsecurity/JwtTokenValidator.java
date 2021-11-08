@@ -24,6 +24,7 @@ public class JwtTokenValidator {
     private static final String JWT_PREFIX = "Bearer ";
     private static final String AUTH_HEADER = "Authorization";
     private final AuthDetailsService authDetailsService;
+
     @Value("${jwt.secret}")
     private String secret;
 

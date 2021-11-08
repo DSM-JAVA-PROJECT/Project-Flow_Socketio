@@ -9,5 +9,5 @@ public interface ChatRoomSocketService {
 
     void rejoinChatRoom(String chatRoomId, SocketIOClient client);
 
-    void resignChatRoom(String chatRoomId,User user, SocketIOClient client, SocketIOServer server);
+    void resignChatRoom(String chatRoomId, User user, SocketIOClient client, SocketIOServer server);
 }

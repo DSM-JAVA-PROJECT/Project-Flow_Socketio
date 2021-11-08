@@ -4,5 +4,6 @@ import com.projectflow.projectflow.domain.user.entity.User;
 
 public interface AuthenticationFacade {
     User getCurrentUser();
+
     String getCurrentEmail();
 }

@@ -3,9 +3,7 @@ package com.projectflow.projectflow.global.auth.facade;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.domain.user.entity.UserRepository;
 import com.projectflow.projectflow.global.auth.exceptions.AuthUserNotFoundException;
-import com.projectflow.projectflow.global.auth.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
