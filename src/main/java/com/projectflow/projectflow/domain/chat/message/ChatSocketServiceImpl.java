@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class MessageSocketServiceImpl implements MessageSocketService {
+public class ChatSocketServiceImpl implements ChatSocketService {
 
     private final SocketAuthenticationFacade authenticationFacade;
 
