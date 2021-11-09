@@ -14,4 +14,6 @@ public class SocketProperty {
 
     public static final String ERROR_KEY = "error";
 
+    public static final String CREATE_PLAN_KEY = "plan.create";
+
 }
