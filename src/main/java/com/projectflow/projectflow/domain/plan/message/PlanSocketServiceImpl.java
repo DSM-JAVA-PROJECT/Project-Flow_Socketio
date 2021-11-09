@@ -3,25 +3,64 @@ package com.projectflow.projectflow.domain.plan.message;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.plan.message.payload.CreatePlanMessage;
+import com.projectflow.projectflow.domain.plan.message.payload.JoinPlanMessage;
+import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.SocketProperty;
+import com.projectflow.projectflow.global.websocket.security.AuthenticationProperty;
+import com.projectflow.projectflow.global.websocket.security.SocketAuthenticationFacade;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class PlanSocketServiceImpl implements PlanSocketService {
 
+    private final SocketAuthenticationFacade authenticationFacade;
+
     @Override
     public void sendCreatePlanMessage(String chatRoomId, Plan plan, SocketIOServer server) {
-        var message = buildResponse(plan);
+        var message = buildCreatePlanResponse(plan);
         server.getRoomOperations(chatRoomId)
                 .sendEvent(SocketProperty.CREATE_PLAN_KEY, message);
     }
 
-    private CreatePlanMessage buildResponse(Plan plan) {
+    @Override
+    public void sendJoinPlanMessage(String chatRoomId, Plan plan, User sender, SocketIOServer server) {
+        server.getRoomOperations(chatRoomId)
+                .getClients()
+                .forEach(client -> {
+                    User receiver = authenticationFacade.getCurrentUser(client);
+                    client.sendEvent(SocketProperty.JOIN_PLAN_KEY, sender, receiver);
+                });
+    }
+
+    /**
+     * @Param 저장된 Plan
+     * plan을 채팅방에 전송할 message로 변환해서 반환해 준다.
+     */
+    private CreatePlanMessage buildCreatePlanResponse(Plan plan) {
         return CreatePlanMessage.builder()
                 .createdAt(plan.getCreatedAt().toString())
                 .planId(plan.getId().toString())
                 .planName(plan.getName())
                 .endDate(plan.getEndDate().toString())
+                .startDate(plan.getStartDate().toString())
+                .build();
+    }
+
+    /**
+     * @Param 일정
+     * @Param 일정에 참가한 사용자
+     * @Param 일정 참가 메세지를 받을 사용자
+     * Plan 객체를 채팅방에 전송할 메세지로 변환해서 반환해 준다.
+     */
+    private JoinPlanMessage buildJoinPlanMessage(Plan plan, User sender, User receiver) {
+        return JoinPlanMessage.builder()
+                .planId(plan.getId().toString())
+                .isMine(sender.equals(receiver))
+                .createdAt(plan.getCreatedAt().toString())
+                .endDate(plan.getEndDate().toString())
+                .planName(plan.getName())
                 .startDate(plan.getStartDate().toString())
                 .build();
     }
