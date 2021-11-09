@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import javax.validation.constraints.NotBlank;
@@ -31,6 +32,9 @@ public class Plan {
 
     @NotNull
     private LocalDate finishDate;
+
+    @CreatedDate
+    private LocalDate createdAt;
 
     private List<PlanUser> planUsers;
 
