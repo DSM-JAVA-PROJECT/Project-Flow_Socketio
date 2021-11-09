@@ -7,5 +7,5 @@ import com.projectflow.projectflow.domain.user.entity.User;
 
 public interface PlanService {
     Plan createPlan(CreatePlanRequest request, User user);
-    void joinPlan(JoinPlanRequest request, User user);
+    Plan joinPlan(JoinPlanRequest request, User user);
 }

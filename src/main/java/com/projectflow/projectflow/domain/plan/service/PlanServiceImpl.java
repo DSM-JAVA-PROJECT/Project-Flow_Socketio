@@ -25,8 +25,9 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public void joinPlan(JoinPlanRequest request, User user) {
-        planRepository.joinPlan(request.getPlanId(), user);
+    public Plan joinPlan(JoinPlanRequest request, User user) {
+        validateChatRoomMember(request.getChatRoomId(), user);
+        return planRepository.joinPlan(request.getPlanId(), user);
     }
 
     private Plan buildPlan(CreatePlanRequest request) {
