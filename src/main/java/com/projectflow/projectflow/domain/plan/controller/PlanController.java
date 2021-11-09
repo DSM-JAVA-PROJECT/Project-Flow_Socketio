@@ -20,7 +20,7 @@ public class PlanController {
     private final PlanSocketService planSocketService;
     private final SocketAuthenticationFacade authenticationFacade;
 
-    @SocketMapping(endpoint = "/plan/create", requestCls = CreatePlanRequest.class)
+    @SocketMapping(endpoint = "plan.create", requestCls = CreatePlanRequest.class)
     public void createPlan(SocketIOClient client, SocketIOServer server, CreatePlanRequest request) {
         User user = authenticationFacade.getCurrentUser(client);
         Plan plan = planService.createPlan(request, user);
