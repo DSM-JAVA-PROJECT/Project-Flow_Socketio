@@ -4,5 +4,5 @@ import com.projectflow.projectflow.domain.user.entity.User;
 
 public interface CustomPlanRepository {
     Plan savePlan(String chatRoomId, Plan plan);
-    void joinPlan(String planId, User user);
+    Plan joinPlan(String planId, User user);
 }
