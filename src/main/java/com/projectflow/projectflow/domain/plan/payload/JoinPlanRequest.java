@@ -13,6 +13,9 @@ import java.time.LocalDate;
 public class JoinPlanRequest {
 
     @NotBlank
+    private String chatRoomId;
+
+    @NotBlank
     private String planId;
 
 }
