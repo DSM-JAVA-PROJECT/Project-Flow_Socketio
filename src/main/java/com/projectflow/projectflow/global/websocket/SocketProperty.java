@@ -16,4 +16,6 @@ public class SocketProperty {
 
     public static final String CREATE_PLAN_KEY = "plan.create";
 
+    public static final String JOIN_PLAN_KEY = "plan.join";
+
 }
