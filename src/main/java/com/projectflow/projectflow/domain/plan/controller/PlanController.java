@@ -2,6 +2,8 @@ package com.projectflow.projectflow.domain.plan.controller;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.projectflow.projectflow.domain.plan.entity.Plan;
+import com.projectflow.projectflow.domain.plan.message.PlanSocketService;
 import com.projectflow.projectflow.domain.plan.payload.CreatePlanRequest;
 import com.projectflow.projectflow.domain.plan.service.PlanService;
 import com.projectflow.projectflow.domain.user.entity.User;
@@ -15,11 +17,13 @@ import lombok.RequiredArgsConstructor;
 public class PlanController {
 
     private final PlanService planService;
+    private final PlanSocketService planSocketService;
     private final SocketAuthenticationFacade authenticationFacade;
 
     @SocketMapping(endpoint = "/plan/create", requestCls = CreatePlanRequest.class)
     public void createPlan(SocketIOClient client, SocketIOServer server, CreatePlanRequest request) {
         User user = authenticationFacade.getCurrentUser(client);
-        planService.createPlan(request, user);
+        Plan plan = planService.createPlan(request, user);
+        planSocketService.sendCreatePlanMessage(request.getChatRoomId(), plan, server);
     }
 }
