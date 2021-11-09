@@ -1,5 +1,6 @@
 package com.projectflow.projectflow.domain.chatroom.message.payload;
 
+import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.*;
 
 @Getter
@@ -7,6 +8,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class ResignMessage {
+
+    private MessageType type = MessageType.CHATROOM;
 
     private String userId;
 
