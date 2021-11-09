@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class JoinMessage {
 
+    @Builder.Default
     private MessageType type = MessageType.CHATROOM;
 
     private String userId;

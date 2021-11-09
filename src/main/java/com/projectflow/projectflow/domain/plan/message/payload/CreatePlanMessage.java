@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 public class CreatePlanMessage {
 
+    @Builder.Default
     private MessageType type = MessageType.PLAN;
 
     private String planId;
