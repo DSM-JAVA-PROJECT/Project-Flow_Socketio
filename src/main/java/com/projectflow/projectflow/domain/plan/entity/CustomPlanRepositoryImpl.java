@@ -3,6 +3,7 @@ package com.projectflow.projectflow.domain.plan.entity;
 import com.mongodb.client.result.UpdateResult;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
 import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
+import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Update;
@@ -25,7 +26,7 @@ public class CustomPlanRepositoryImpl implements CustomPlanRepository {
                 new Update().push("plans", plan),
                 ChatRoom.class);
 
-        if (!(result.getMatchedCount() == 1)) {
+        if (result.getMatchedCount() != 1) {
             throw ChatRoomNotFoundException.EXCEPTION;
         }
         List<Plan> plans = mongoTemplate.findOne(query(where("_id").is(chatRoomId)),
@@ -33,5 +34,16 @@ public class CustomPlanRepositoryImpl implements CustomPlanRepository {
 
         return plans.get(plans.size() - 1);
 
+    }
+
+    @Override
+    public void joinPlan(String planId, User user) {
+        UpdateResult result = mongoTemplate.updateFirst(query(where("plans.$id").is(planId)),
+                new Update().push("planUsers", user),
+                ChatRoom.class);
+
+        if (result.getMatchedCount() != 1) {
+            throw ChatRoomNotFoundException.EXCEPTION;
+        }
     }
 }
