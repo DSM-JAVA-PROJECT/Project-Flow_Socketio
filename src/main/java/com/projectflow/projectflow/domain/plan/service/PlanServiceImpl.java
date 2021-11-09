@@ -5,6 +5,7 @@ import com.projectflow.projectflow.domain.chatroom.exceptions.NotChatRoomMemberE
 import com.projectflow.projectflow.domain.plan.entity.CustomPlanRepository;
 import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.plan.payload.CreatePlanRequest;
+import com.projectflow.projectflow.domain.plan.payload.JoinPlanRequest;
 import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,11 @@ public class PlanServiceImpl implements PlanService {
         validateChatRoomMember(request.getChatRoomId(), user);
         Plan unsavedPlan = buildPlan(request);
         return planRepository.savePlan(request.getChatRoomId(), unsavedPlan);
+    }
+
+    @Override
+    public void joinPlan(JoinPlanRequest request, User user) {
+        planRepository.joinPlan(request.getPlanId(), user);
     }
 
     private Plan buildPlan(CreatePlanRequest request) {
