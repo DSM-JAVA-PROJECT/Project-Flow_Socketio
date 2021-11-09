@@ -1,5 +1,6 @@
 package com.projectflow.projectflow.domain.plan.entity;
 
+import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -39,11 +41,17 @@ public class Plan {
     private List<PlanUser> planUsers;
 
     @Builder
-    private Plan(String name, LocalDate endDate, LocalDate startDate, LocalDate finishDate) {
+    private Plan(String name, LocalDate endDate, LocalDate startDate, LocalDate finishDate, List<User> users) {
+        List<PlanUser> planUsers = users.stream().map(user -> PlanUser.builder()
+                        .isFinished(false)
+                        .user(user)
+                        .build())
+                .collect(Collectors.toList());
+
         this.name = name;
         this.endDate = endDate;
         this.startDate = startDate;
         this.finishDate = finishDate;
-        this.planUsers = new ArrayList<>();
+        this.planUsers = planUsers;
     }
 }

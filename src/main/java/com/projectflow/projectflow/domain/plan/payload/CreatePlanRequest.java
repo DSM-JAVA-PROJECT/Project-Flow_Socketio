@@ -24,4 +24,6 @@ public class CreatePlanRequest {
     @NotBlank
     private LocalDate planStartDate;
 
+    private boolean isForced;
+
 }
