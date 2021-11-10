@@ -26,4 +26,8 @@ public class JoinPlanMessage {
 
     private boolean isMine;
 
+    private String senderName;
+
+    private String senderImage;
+
 }

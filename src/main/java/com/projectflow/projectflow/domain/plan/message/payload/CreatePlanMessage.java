@@ -21,4 +21,8 @@ public class CreatePlanMessage {
 
     private String createdAt;
 
+    private String senderName;
+
+    private String senderImage;
+
 }

@@ -19,8 +19,8 @@ public class PlanSocketServiceImpl implements PlanSocketService {
     private final SocketAuthenticationFacade authenticationFacade;
 
     @Override
-    public void sendCreatePlanMessage(String chatRoomId, Plan plan, SocketIOServer server) {
-        var message = buildCreatePlanResponse(plan);
+    public void sendCreatePlanMessage(String chatRoomId, Plan plan, User user, SocketIOServer server) {
+        var message = buildCreatePlanResponse(plan, user);
         server.getRoomOperations(chatRoomId)
                 .sendEvent(SocketProperty.CREATE_PLAN_KEY, message);
     }
@@ -49,13 +49,15 @@ public class PlanSocketServiceImpl implements PlanSocketService {
      * @Param 저장된 Plan
      * plan을 채팅방에 전송할 message로 변환해서 반환해 준다.
      */
-    private CreatePlanMessage buildCreatePlanResponse(Plan plan) {
+    private CreatePlanMessage buildCreatePlanResponse(Plan plan, User user) {
         return CreatePlanMessage.builder()
                 .createdAt(plan.getCreatedAt().toString())
                 .planId(plan.getId().toString())
                 .planName(plan.getName())
                 .endDate(plan.getEndDate().toString())
                 .startDate(plan.getStartDate().toString())
+                .senderImage(user.getProfileImage())
+                .senderName(user.getName())
                 .build();
     }
 
@@ -73,6 +75,8 @@ public class PlanSocketServiceImpl implements PlanSocketService {
                 .endDate(plan.getEndDate().toString())
                 .planName(plan.getName())
                 .startDate(plan.getStartDate().toString())
+                .senderImage(sender.getProfileImage())
+                .senderName(sender.getName())
                 .build();
     }
 
@@ -90,6 +94,8 @@ public class PlanSocketServiceImpl implements PlanSocketService {
                 .endDate(plan.getEndDate().toString())
                 .planName(plan.getName())
                 .startDate(plan.getStartDate().toString())
+                .senderImage(sender.getProfileImage())
+                .senderName(sender.getName())
                 .build();
     }
 
