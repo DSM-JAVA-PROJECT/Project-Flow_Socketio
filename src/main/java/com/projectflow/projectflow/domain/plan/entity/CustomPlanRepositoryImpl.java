@@ -3,6 +3,7 @@ package com.projectflow.projectflow.domain.plan.entity;
 import com.mongodb.client.result.UpdateResult;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
 import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
+import com.projectflow.projectflow.domain.plan.exceptions.PlanNotFoundException;
 import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -53,5 +54,14 @@ public class CustomPlanRepositoryImpl implements CustomPlanRepository {
                 .filter(plan -> plan.getId().toString().equals(planId))
                 .findFirst()
                 .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+    }
+
+    @Override
+    public Plan findById(String planId) {
+        return mongoTemplate.findOne(query(where("plans.$id").is(planId)),
+                        ChatRoom.class).getPlans()
+                .stream().filter(plan -> plan.getId().toString().equals(planId))
+                .findFirst()
+                .orElseThrow(() -> PlanNotFoundException.EXCEPTION);
     }
 }
