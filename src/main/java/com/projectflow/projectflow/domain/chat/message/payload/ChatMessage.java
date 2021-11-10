@@ -14,7 +14,7 @@ import java.util.List;
 public class ChatMessage {
 
     @Builder.Default
-    private MessageType messageType = MessageType.MESSAGE;
+    private MessageType type = MessageType.MESSAGE;
 
     private String id;
 
