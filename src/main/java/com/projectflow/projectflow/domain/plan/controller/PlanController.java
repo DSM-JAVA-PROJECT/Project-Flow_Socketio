@@ -6,6 +6,7 @@ import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.plan.message.PlanSocketService;
 import com.projectflow.projectflow.domain.plan.payload.CreatePlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.JoinPlanRequest;
+import com.projectflow.projectflow.domain.plan.payload.ResignPlanRequest;
 import com.projectflow.projectflow.domain.plan.service.PlanService;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.annotations.SocketController;
@@ -33,5 +34,12 @@ public class PlanController {
         User user = authenticationFacade.getCurrentUser(client);
         Plan plan = planService.joinPlan(request, user);
         planSocketService.sendJoinPlanMessage(request.getChatRoomId(), plan, user, server);
+    }
+
+    @SocketMapping(endpoint = "plan.resign", requestCls = ResignPlanRequest.class)
+    public void resignPlan(SocketIOClient client, SocketIOServer server, ResignPlanRequest request) {
+        User user = authenticationFacade.getCurrentUser(client);
+        Plan plan = planService.resignPlan(request, user);
+        planSocketService.sendResignPlanMessage(request.getChatRoomId(), plan, user, server);
     }
 }
