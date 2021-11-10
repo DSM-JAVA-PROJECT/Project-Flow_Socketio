@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,11 +41,11 @@ public class Plan {
 
     @Builder
     private Plan(String name, LocalDate endDate, LocalDate startDate, LocalDate finishDate, List<User> users) {
-        List<PlanUser> planUsers = users.stream().map(user -> PlanUser.builder()
+        List<PlanUser> planUsers = users != null ? users.stream().map(user -> PlanUser.builder()
                         .isFinished(false)
                         .user(user)
                         .build())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()) : null;
 
         this.name = name;
         this.endDate = endDate;
