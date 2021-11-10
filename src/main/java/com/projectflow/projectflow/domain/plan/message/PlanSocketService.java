@@ -6,5 +6,8 @@ import com.projectflow.projectflow.domain.user.entity.User;
 
 public interface PlanSocketService {
     void sendCreatePlanMessage(String chatRoomId, Plan plan, SocketIOServer server);
+
     void sendJoinPlanMessage(String chatRoomId, Plan plan, User sender, SocketIOServer server);
+
+    void sendResignPlanMessage(String chatRoomId, Plan plan, User sender, SocketIOServer server);
 }

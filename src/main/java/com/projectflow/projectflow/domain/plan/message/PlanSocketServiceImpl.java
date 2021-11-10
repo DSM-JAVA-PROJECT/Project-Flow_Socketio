@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.plan.message.payload.CreatePlanMessage;
 import com.projectflow.projectflow.domain.plan.message.payload.JoinPlanMessage;
+import com.projectflow.projectflow.domain.plan.message.payload.ResignPlanMessage;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.SocketProperty;
 import com.projectflow.projectflow.global.websocket.security.AuthenticationProperty;
@@ -30,7 +31,17 @@ public class PlanSocketServiceImpl implements PlanSocketService {
                 .getClients()
                 .forEach(client -> {
                     User receiver = authenticationFacade.getCurrentUser(client);
-                    client.sendEvent(SocketProperty.JOIN_PLAN_KEY, sender, receiver);
+                    client.sendEvent(SocketProperty.JOIN_PLAN_KEY, buildJoinPlanMessage(plan, sender, receiver));
+                });
+    }
+
+    @Override
+    public void sendResignPlanMessage(String chatRoomId, Plan plan, User sender, SocketIOServer server) {
+        server.getRoomOperations(chatRoomId)
+                .getClients()
+                .forEach(client -> {
+                    User receiver = authenticationFacade.getCurrentUser(client);
+                    client.sendEvent(SocketProperty.RESIGN_PLAN_KEY, buildResignPlanMessage(plan, sender, receiver));
                 });
     }
 
@@ -56,6 +67,23 @@ public class PlanSocketServiceImpl implements PlanSocketService {
      */
     private JoinPlanMessage buildJoinPlanMessage(Plan plan, User sender, User receiver) {
         return JoinPlanMessage.builder()
+                .planId(plan.getId().toString())
+                .isMine(sender.equals(receiver))
+                .createdAt(plan.getCreatedAt().toString())
+                .endDate(plan.getEndDate().toString())
+                .planName(plan.getName())
+                .startDate(plan.getStartDate().toString())
+                .build();
+    }
+
+    /**
+     * @Param 일정
+     * @Param 일정을 탈퇴한 사용자
+     * @Param 일정 탈퇴 메세지를 받을 사용자
+     * Plan 객체를 채팅방에 전송할 메세지로 변환해서 반환해 준다.
+     */
+    private ResignPlanMessage buildResignPlanMessage(Plan plan, User sender, User receiver) {
+        return ResignPlanMessage.builder()
                 .planId(plan.getId().toString())
                 .isMine(sender.equals(receiver))
                 .createdAt(plan.getCreatedAt().toString())
