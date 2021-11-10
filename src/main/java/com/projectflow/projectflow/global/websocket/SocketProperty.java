@@ -18,4 +18,6 @@ public class SocketProperty {
 
     public static final String JOIN_PLAN_KEY = "plan.join";
 
+    public static final String RESIGN_PLAN_KEY = "plan.resign";
+
 }
