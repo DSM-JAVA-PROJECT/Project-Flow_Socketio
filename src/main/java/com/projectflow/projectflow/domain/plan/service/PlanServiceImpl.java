@@ -6,12 +6,15 @@ import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundEx
 import com.projectflow.projectflow.domain.chatroom.exceptions.NotChatRoomMemberException;
 import com.projectflow.projectflow.domain.plan.entity.CustomPlanRepository;
 import com.projectflow.projectflow.domain.plan.entity.Plan;
+import com.projectflow.projectflow.domain.plan.exceptions.NotPlanMemberException;
 import com.projectflow.projectflow.domain.plan.payload.CreatePlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.JoinPlanRequest;
+import com.projectflow.projectflow.domain.plan.payload.ResignPlanRequest;
 import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,7 @@ public class PlanServiceImpl implements PlanService {
     private final CustomPlanRepository planRepository;
     private final ChatRoomRepository chatRoomRepository;
 
+    @Transactional
     @Override
     public Plan createPlan(CreatePlanRequest request, User user) {
         validateChatRoomMember(request.getChatRoomId(), user);
@@ -46,6 +50,14 @@ public class PlanServiceImpl implements PlanService {
         return planRepository.joinPlan(request.getPlanId(), user);
     }
 
+    @Transactional
+    @Override
+    public Plan resignPlan(ResignPlanRequest request, User user) {
+        Plan plan = planRepository.findById(request.getPlanId());
+        plan.getPlanUsers().removeIf(planUser -> planUser.getUser().equals(user));
+        return plan;
+    }
+
     private Plan buildPlan(CreatePlanRequest request, List<User> users) {
         return Plan.builder()
                 .endDate(request.getPlanEndDate())
@@ -53,6 +65,12 @@ public class PlanServiceImpl implements PlanService {
                 .name(request.getPlanName())
                 .users(users)
                 .build();
+    }
+
+    private void validatePlanMember(Plan plan, User user) {
+        if (plan.getPlanUsers().stream().noneMatch(planUser -> planUser.getUser().equals(user))) {
+            throw NotPlanMemberException.EXCEPTION;
+        }
     }
 
     private void validateChatRoomMember(String chatRoomId, User user) {
