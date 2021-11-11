@@ -25,4 +25,7 @@ public class CreatePlanMessage {
 
     private String senderImage;
 
+    @Builder.Default
+    private boolean isMine = false;
+
 }
