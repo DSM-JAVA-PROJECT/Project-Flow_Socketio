@@ -16,6 +16,9 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,7 @@ import java.util.List;
 @Service
 public class PlanServiceImpl implements PlanService {
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
     private final CustomPlanRepository planRepository;
     private final ChatRoomRepository chatRoomRepository;
 
@@ -60,10 +64,11 @@ public class PlanServiceImpl implements PlanService {
 
     private Plan buildPlan(CreatePlanRequest request, List<User> users) {
         return Plan.builder()
-                .endDate(request.getPlanEndDate())
-                .startDate(request.getPlanStartDate())
+                .endDate(LocalDate.parse(request.getPlanEndDate(), FORMATTER))
+                .startDate(LocalDate.parse(request.getPlanStartDate(), FORMATTER))
                 .name(request.getPlanName())
                 .users(users)
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 

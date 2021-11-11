@@ -19,10 +19,10 @@ public class CreatePlanRequest {
     private String planName;
 
     @NotBlank
-    private LocalDate planEndDate;
+    private String planEndDate;
 
     @NotBlank
-    private LocalDate planStartDate;
+    private String planStartDate;
 
     private boolean isForced;
 
