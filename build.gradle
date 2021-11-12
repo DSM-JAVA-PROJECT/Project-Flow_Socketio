@@ -41,6 +41,7 @@ dependencies {
 	implementation 'org.glassfish.jaxb:jaxb-runtime'
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'org.apache.commons:commons-collections4:4.4'
 }
 
 test {
