@@ -79,7 +79,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     private void validateProjectMember(String projectId, User user) {
-        if (!chatRoomRepository.isProjectMember(user, projectId)) {
+        if (chatRoomRepository.isNotProjectMember(user, projectId)) {
             throw NotProjectMemberException.EXCEPTION;
         }
     }

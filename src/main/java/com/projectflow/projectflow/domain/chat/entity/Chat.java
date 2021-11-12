@@ -1,6 +1,8 @@
 package com.projectflow.projectflow.domain.chat.entity;
 
+import com.projectflow.projectflow.domain.chat.entity.enums.ChatType;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
+import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.*;
 import org.bson.types.ObjectId;
@@ -34,14 +36,21 @@ public class Chat {
     @DBRef(lazy = true)
     private List<User> receiver;
 
+    @DBRef
+    private Plan plan;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
+    private ChatType chatType;
+
     @Builder
-    private Chat(String message, User sender, ChatRoom chatRoom, List<User> receiver) {
+    private Chat(String message, User sender, ChatRoom chatRoom, List<User> receiver, Plan plan, ChatType chatType) {
         this.message = message;
         this.sender = sender;
         this.chatRoom = chatRoom;
         this.receiver = receiver;
+        this.chatType = chatType;
+        this.plan = plan;
     }
 }

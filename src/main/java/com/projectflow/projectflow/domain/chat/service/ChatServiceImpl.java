@@ -2,6 +2,7 @@ package com.projectflow.projectflow.domain.chat.service;
 
 import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.entity.ChatRepository;
+import com.projectflow.projectflow.domain.chat.entity.enums.ChatType;
 import com.projectflow.projectflow.domain.chat.exceptions.UserNotMessageOwnerException;
 import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
 import com.projectflow.projectflow.domain.chat.payload.OldChatMessageListResponse;
@@ -13,6 +14,7 @@ import com.projectflow.projectflow.domain.chatroom.exceptions.NotChatRoomMemberE
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.auth.facade.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,10 +35,6 @@ public class ChatServiceImpl implements ChatService {
     public Chat saveMessage(ChatRequest request, User user) {
         validateChatRoom(request.getChatRoomId(), user);
         ChatRoom chatRoom = findChatRoomById(request.getChatRoomId());
-
-        List<User> receivers = chatRoom.getUserIds();
-        receivers.remove(user);
-
         return chatRepository.save(buildChat(chatRoom, user, request.getMessage()));
     }
 
@@ -56,7 +54,7 @@ public class ChatServiceImpl implements ChatService {
         return new OldChatMessageListResponse(
                 chatRepository.findAllByChatRoomOrderByCreatedAtAsc(chatRoom, pageable)
                         .map(chat -> {
-                            chat.getReceiver().remove(user);
+                            CollectionUtils.emptyIfNull(chat.getReceiver()).remove(user);
                             return chat;
                         })
                         .map(chat -> buildResponse(chat, user)).getContent()
@@ -64,14 +62,28 @@ public class ChatServiceImpl implements ChatService {
     }
 
     private OldChatMessageResponse buildResponse(Chat chat, User user) {
+        String planName = null;
+        String endDate = null;
+        String startDate = null;
+
+        if(chat.getPlan() != null) {
+            planName = chat.getPlan().getName();
+            endDate = chat.getPlan().getEndDate().toString();
+            startDate = chat.getPlan().getStartDate().toString();
+        }
+
         return OldChatMessageResponse.builder()
                 .createdAt(chat.getCreatedAt())
                 .id(chat.getId().toString())
                 .isMine(user.equals(chat.getSender()))
                 .message(chat.getMessage())
-                .readerList(chat.getReceiver().stream().map(User::getEmail).collect(Collectors.toList()))
+                .readerList(CollectionUtils.emptyIfNull(chat.getReceiver()).stream().map(User::getEmail).collect(Collectors.toList()))
                 .senderImage(chat.getSender().getProfileImage())
                 .senderName(chat.getSender().getName())
+                .planName(planName)
+                .endDate(endDate)
+                .startDate(startDate)
+                .type(chat.getChatType().getMessageType())
                 .build();
     }
 
@@ -99,6 +111,7 @@ public class ChatServiceImpl implements ChatService {
                 .sender(user)
                 .chatRoom(chatRoom)
                 .message(message)
+                .chatType(ChatType.CHAT)
                 .build();
     }
 }

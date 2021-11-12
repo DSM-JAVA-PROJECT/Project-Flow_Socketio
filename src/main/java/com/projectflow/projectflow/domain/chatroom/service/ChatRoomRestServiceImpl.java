@@ -10,7 +10,6 @@ import com.projectflow.projectflow.domain.chatroom.payload.ChatRoomListResponse;
 import com.projectflow.projectflow.domain.chatroom.payload.ChatRoomResponse;
 import com.projectflow.projectflow.domain.project.entity.Project;
 import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
-import com.projectflow.projectflow.domain.project.entity.ProjectUser;
 import com.projectflow.projectflow.domain.project.exceptions.ProjectNotFoundException;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.auth.facade.AuthenticationFacade;
@@ -61,7 +60,7 @@ public class ChatRoomRestServiceImpl implements ChatRoomRestService {
 
     private void validateProjectMember(Project project) {
         User user = authenticationFacade.getCurrentUser();
-        if (!chatRoomRepository.isProjectMember(user, project.getId().toString())) {
+        if (chatRoomRepository.isNotProjectMember(user, project.getId().toString())) {
             throw NotProjectMemberException.EXCEPTION;
         }
     }

@@ -4,9 +4,9 @@ import com.projectflow.projectflow.domain.user.entity.User;
 
 public interface CustomChatRoomRepository {
 
-    boolean isProjectMember(User user, String projectId);
+    boolean isNotProjectMember(User user, String projectId);
 
-    String joinChatRoom(String chatRoomId, User users);
+    void joinChatRoom(String chatRoomId, User users);
 
     boolean isChatRoomMember(String chatRoomId, User user);
 

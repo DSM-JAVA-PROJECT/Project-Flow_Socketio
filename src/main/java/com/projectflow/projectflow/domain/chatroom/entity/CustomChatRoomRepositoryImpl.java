@@ -17,17 +17,17 @@ public class CustomChatRoomRepositoryImpl implements CustomChatRoomRepository {
 
     // TODO: 2021-09-17 프로젝트 레포지토리로 이동하렴
     @Override
-    public boolean isProjectMember(User user, String projectId) {
-        return mongoTemplate.exists(query(where("_id").is(projectId)
+    public boolean isNotProjectMember(User user, String projectId) {
+        return !mongoTemplate.exists(query(where("_id").is(projectId)
                         .andOperator(where("projectUsers.userId").is(user.getId()))),
                 Project.class);
     }
 
     @Override
-    public String joinChatRoom(String chatRoomId, User user) {
-        return mongoTemplate.findAndModify(query(where("_id").is(chatRoomId)),
+    public void joinChatRoom(String chatRoomId, User user) {
+        mongoTemplate.findAndModify(query(where("_id").is(chatRoomId)),
                 new Update().push("userIds", user),
-                ChatRoom.class).getId().toString();
+                ChatRoom.class);
     }
 
     @Override

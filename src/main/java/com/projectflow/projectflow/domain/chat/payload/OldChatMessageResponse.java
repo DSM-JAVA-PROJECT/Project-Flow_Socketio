@@ -1,5 +1,6 @@
 package com.projectflow.projectflow.domain.chat.payload;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,10 +13,10 @@ import java.util.List;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OldChatMessageResponse {
 
-    @Builder.Default
-    private MessageType type = MessageType.MESSAGE;
+    private MessageType type;
 
     private String id;
 
@@ -31,5 +32,10 @@ public class OldChatMessageResponse {
 
     private LocalDateTime createdAt;
 
+    private String planName;
+
+    private String startDate;
+
+    private String endDate;
 
 }
