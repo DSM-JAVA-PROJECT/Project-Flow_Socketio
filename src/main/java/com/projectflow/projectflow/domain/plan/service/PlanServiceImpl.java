@@ -1,5 +1,8 @@
 package com.projectflow.projectflow.domain.plan.service;
 
+import com.projectflow.projectflow.domain.chat.entity.Chat;
+import com.projectflow.projectflow.domain.chat.entity.ChatRepository;
+import com.projectflow.projectflow.domain.chat.entity.enums.ChatType;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoomRepository;
 import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
@@ -12,6 +15,7 @@ import com.projectflow.projectflow.domain.plan.payload.JoinPlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.ResignPlanRequest;
 import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +33,7 @@ public class PlanServiceImpl implements PlanService {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
     private final CustomPlanRepository planRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatRepository chatRepository;
 
     @Transactional
     @Override
@@ -37,15 +42,20 @@ public class PlanServiceImpl implements PlanService {
 
         List<User> users = new ArrayList<>();
 
+        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(request.getChatRoomId()))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+
         if (request.isForced()) {
-            ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(request.getChatRoomId()))
-                    .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
             users = chatRoom.getUserIds();
         }
 
         Plan unsavedPlan = buildPlan(request, users);
+        Plan plan = planRepository.savePlan(request.getChatRoomId(), unsavedPlan);
 
-        return planRepository.savePlan(request.getChatRoomId(), unsavedPlan);
+        Chat unsavedChat = buildPlanChat(chatRoom, plan, user);
+        chatRepository.save(unsavedChat);
+
+        return plan;
     }
 
     @Override
@@ -58,6 +68,7 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public Plan resignPlan(ResignPlanRequest request, User user) {
         Plan plan = planRepository.findById(request.getPlanId());
+        validatePlanMember(plan, user);
         plan.getPlanUsers().removeIf(planUser -> planUser.getUser().equals(user));
         return plan;
     }
@@ -69,6 +80,19 @@ public class PlanServiceImpl implements PlanService {
                 .name(request.getPlanName())
                 .users(users)
                 .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    private Chat buildPlanChat(ChatRoom chatRoom, Plan plan, User user) {
+        List<User> receivers = chatRoom.getUserIds();
+        CollectionUtils.emptyIfNull(receivers).remove(user);
+
+        return Chat.builder()
+                .plan(plan)
+                .receiver(receivers)
+                .chatRoom(chatRoom)
+                .sender(user)
+                .chatType(ChatType.PLAN)
                 .build();
     }
 
