@@ -36,8 +36,7 @@ public class Chat {
     @DBRef(lazy = true)
     private List<User> receiver;
 
-    @DBRef
-    private Plan plan;
+    private String planId;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -45,12 +44,12 @@ public class Chat {
     private ChatType chatType;
 
     @Builder
-    private Chat(String message, User sender, ChatRoom chatRoom, List<User> receiver, Plan plan, ChatType chatType) {
+    private Chat(String message, User sender, ChatRoom chatRoom, List<User> receiver, String planId, ChatType chatType) {
         this.message = message;
         this.sender = sender;
         this.chatRoom = chatRoom;
         this.receiver = receiver;
         this.chatType = chatType;
-        this.plan = plan;
+        this.planId = planId;
     }
 }
