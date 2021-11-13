@@ -9,3 +9,7 @@ jwt:
   secret: ${SECRET_KEY}
 socket:
   port: ${SOCKET_PORT:8081}
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
