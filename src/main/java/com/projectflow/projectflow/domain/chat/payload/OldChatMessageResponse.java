@@ -38,4 +38,6 @@ public class OldChatMessageResponse {
 
     private String endDate;
 
+    private String planId;
+
 }

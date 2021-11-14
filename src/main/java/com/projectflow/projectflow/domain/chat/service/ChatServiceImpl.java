@@ -68,12 +68,14 @@ public class ChatServiceImpl implements ChatService {
         String planName = null;
         String endDate = null;
         String startDate = null;
+        String planId = null;
 
         if(chat.getPlanId() != null) {
             Plan plan = customPlanRepository.findById(chat.getPlanId());
             planName = plan.getName();
             endDate = plan.getEndDate().toString();
             startDate = plan.getStartDate().toString();
+            planId = plan.getId().toString();
         }
 
         return OldChatMessageResponse.builder()
@@ -85,6 +87,7 @@ public class ChatServiceImpl implements ChatService {
                 .senderImage(chat.getSender().getProfileImage())
                 .senderName(chat.getSender().getName())
                 .planName(planName)
+                .planId(planId)
                 .endDate(endDate)
                 .startDate(startDate)
                 .type(chat.getChatType().getMessageType())
