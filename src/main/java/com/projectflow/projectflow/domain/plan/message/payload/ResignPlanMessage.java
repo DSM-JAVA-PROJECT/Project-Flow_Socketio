@@ -12,7 +12,7 @@ import lombok.Getter;
 public class ResignPlanMessage {
 
     @Builder.Default
-    private MessageType type = MessageType.PLAN;
+    private MessageType type = MessageType.RESIGN_PLAN;
 
     private String planId;
 

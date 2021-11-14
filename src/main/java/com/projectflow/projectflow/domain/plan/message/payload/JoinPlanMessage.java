@@ -12,7 +12,7 @@ import lombok.Getter;
 public class JoinPlanMessage {
 
     @Builder.Default
-    private MessageType type = MessageType.PLAN;
+    private MessageType type = MessageType.JOIN_PLAN;
 
     private String planId;
 
