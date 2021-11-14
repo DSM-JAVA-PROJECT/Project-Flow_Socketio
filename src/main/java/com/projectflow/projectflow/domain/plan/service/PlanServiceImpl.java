@@ -8,6 +8,7 @@ import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundEx
 import com.projectflow.projectflow.domain.chatroom.exceptions.NotChatRoomMemberException;
 import com.projectflow.projectflow.domain.plan.entity.CustomPlanRepository;
 import com.projectflow.projectflow.domain.plan.entity.Plan;
+import com.projectflow.projectflow.domain.plan.exceptions.AlreadyPlanParticipateException;
 import com.projectflow.projectflow.domain.plan.exceptions.NotPlanMemberException;
 import com.projectflow.projectflow.domain.plan.payload.CreatePlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.JoinPlanRequest;
@@ -59,9 +60,11 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
+    @Transactional
     public Plan joinPlan(JoinPlanRequest request, User user) {
         validateChatRoomMember(request.getChatRoomId(), user);
-        return planRepository.joinPlan(request.getPlanId(), user);
+        Plan plan = planRepository.joinPlan(request.getPlanId(), user);
+        validatePlanMember(plan, user);
     }
 
     @Transactional
@@ -105,6 +108,12 @@ public class PlanServiceImpl implements PlanService {
     private void validateChatRoomMember(String chatRoomId, User user) {
         if (!chatRoomRepository.isChatRoomMember(chatRoomId, user)) {
             throw NotChatRoomMemberException.EXCEPTION;
+        }
+    }
+
+    private void validateAlreadyPlanParticipated(Plan plan, User user) {
+        if (plan.getPlanUsers().stream().noneMatch(planUser -> planUser.getUser().equals(user))) {
+            throw AlreadyPlanParticipateException.EXCEPTION;
         }
     }
 

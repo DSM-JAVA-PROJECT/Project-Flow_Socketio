@@ -20,6 +20,7 @@ public enum ErrorCode {
     JWT_VALIDATE_FAILED(401, "Jwt Validate Failed"),
     NOT_PLAN_MEMBER(403, "User Not Plan Member"),
     PLAN_NOT_FOUND(404, "Plan Not Found"),
+    PLAN_ALREADY_PARTICIPATE(409, "Already Plan Participate"),
     INVALID_TOKEN(401, "Invalid Token");
 
     private final int status;
