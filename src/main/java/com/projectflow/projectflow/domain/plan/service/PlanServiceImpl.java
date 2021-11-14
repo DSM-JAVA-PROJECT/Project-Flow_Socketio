@@ -88,7 +88,7 @@ public class PlanServiceImpl implements PlanService {
         CollectionUtils.emptyIfNull(receivers).remove(user);
 
         return Chat.builder()
-                .plan(plan)
+                .planId(plan.getId().toString())
                 .receiver(receivers)
                 .chatRoom(chatRoom)
                 .sender(user)

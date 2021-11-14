@@ -11,6 +11,8 @@ import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoomRepository;
 import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
 import com.projectflow.projectflow.domain.chatroom.exceptions.NotChatRoomMemberException;
+import com.projectflow.projectflow.domain.plan.entity.CustomPlanRepository;
+import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.auth.facade.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final AuthenticationFacade authenticationFacade;
+    private final CustomPlanRepository customPlanRepository;
 
     @Override
     public Chat saveMessage(ChatRequest request, User user) {
@@ -66,10 +69,11 @@ public class ChatServiceImpl implements ChatService {
         String endDate = null;
         String startDate = null;
 
-        if(chat.getPlan() != null) {
-            planName = chat.getPlan().getName();
-            endDate = chat.getPlan().getEndDate().toString();
-            startDate = chat.getPlan().getStartDate().toString();
+        if(chat.getPlanId() != null) {
+            Plan plan = customPlanRepository.findById(chat.getPlanId());
+            planName = plan.getName();
+            endDate = plan.getEndDate().toString();
+            startDate = plan.getStartDate().toString();
         }
 
         return OldChatMessageResponse.builder()
