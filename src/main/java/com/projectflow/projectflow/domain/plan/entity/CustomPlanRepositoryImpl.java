@@ -58,7 +58,7 @@ public class CustomPlanRepositoryImpl implements CustomPlanRepository {
 
     @Override
     public Plan findById(String planId) {
-        return mongoTemplate.findOne(query(where("plans.$id").is(planId)),
+        return mongoTemplate.findOne(query(where("plans.id").is(planId)),
                         ChatRoom.class).getPlans()
                 .stream().filter(plan -> plan.getId().toString().equals(planId))
                 .findFirst()
