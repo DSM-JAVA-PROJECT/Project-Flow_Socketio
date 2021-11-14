@@ -2,7 +2,6 @@ package com.projectflow.projectflow.domain.plan.service;
 
 import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.entity.ChatRepository;
-import com.projectflow.projectflow.domain.chat.entity.enums.ChatType;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoomRepository;
 import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
@@ -14,6 +13,7 @@ import com.projectflow.projectflow.domain.plan.payload.CreatePlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.JoinPlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.ResignPlanRequest;
 import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.bson.types.ObjectId;
@@ -92,7 +92,7 @@ public class PlanServiceImpl implements PlanService {
                 .receiver(receivers)
                 .chatRoom(chatRoom)
                 .sender(user)
-                .chatType(ChatType.PLAN)
+                .messageType(MessageType.PLAN)
                 .build();
     }
 

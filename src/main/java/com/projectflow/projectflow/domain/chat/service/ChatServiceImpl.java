@@ -2,7 +2,6 @@ package com.projectflow.projectflow.domain.chat.service;
 
 import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.entity.ChatRepository;
-import com.projectflow.projectflow.domain.chat.entity.enums.ChatType;
 import com.projectflow.projectflow.domain.chat.exceptions.UserNotMessageOwnerException;
 import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
 import com.projectflow.projectflow.domain.chat.payload.OldChatMessageListResponse;
@@ -15,6 +14,7 @@ import com.projectflow.projectflow.domain.plan.entity.CustomPlanRepository;
 import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.auth.facade.AuthenticationFacade;
+import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.bson.types.ObjectId;
@@ -70,7 +70,7 @@ public class ChatServiceImpl implements ChatService {
         String startDate = null;
         String planId = null;
 
-        if(chat.getPlanId() != null) {
+        if (chat.getPlanId() != null) {
             Plan plan = customPlanRepository.findById(chat.getPlanId());
             planName = plan.getName();
             endDate = plan.getEndDate().toString();
@@ -90,7 +90,7 @@ public class ChatServiceImpl implements ChatService {
                 .planId(planId)
                 .endDate(endDate)
                 .startDate(startDate)
-                .type(chat.getChatType().getMessageType())
+                .type(chat.getMessageType())
                 .build();
     }
 
@@ -118,7 +118,7 @@ public class ChatServiceImpl implements ChatService {
                 .sender(user)
                 .chatRoom(chatRoom)
                 .message(message)
-                .chatType(ChatType.CHAT)
+                .messageType(MessageType.MESSAGE)
                 .build();
     }
 }

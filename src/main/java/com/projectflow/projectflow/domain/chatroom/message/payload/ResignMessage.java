@@ -10,7 +10,7 @@ import lombok.*;
 public class ResignMessage {
 
     @Builder.Default
-    private MessageType type = MessageType.CHATROOM;
+    private MessageType type = MessageType.RESIGN_CHATROOM;
 
     private String userId;
 

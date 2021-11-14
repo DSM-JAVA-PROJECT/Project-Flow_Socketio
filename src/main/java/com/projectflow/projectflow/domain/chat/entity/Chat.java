@@ -1,9 +1,8 @@
 package com.projectflow.projectflow.domain.chat.entity;
 
-import com.projectflow.projectflow.domain.chat.entity.enums.ChatType;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
-import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
@@ -41,15 +40,15 @@ public class Chat {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    private ChatType chatType;
+    private MessageType messageType;
 
     @Builder
-    private Chat(String message, User sender, ChatRoom chatRoom, List<User> receiver, String planId, ChatType chatType) {
+    private Chat(String message, User sender, ChatRoom chatRoom, List<User> receiver, String planId, MessageType messageType) {
         this.message = message;
         this.sender = sender;
         this.chatRoom = chatRoom;
         this.receiver = receiver;
-        this.chatType = chatType;
+        this.messageType = messageType;
         this.planId = planId;
     }
 }
