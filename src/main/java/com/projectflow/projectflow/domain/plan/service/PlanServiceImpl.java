@@ -64,7 +64,8 @@ public class PlanServiceImpl implements PlanService {
     public Plan joinPlan(JoinPlanRequest request, User user) {
         validateChatRoomMember(request.getChatRoomId(), user);
         Plan plan = planRepository.joinPlan(request.getPlanId(), user);
-        validatePlanMember(plan, user);
+        validateAlreadyPlanParticipated(plan, user);
+        return plan;
     }
 
     @Transactional
