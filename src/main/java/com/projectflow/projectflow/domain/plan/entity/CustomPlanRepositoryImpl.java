@@ -39,15 +39,15 @@ public class CustomPlanRepositoryImpl implements CustomPlanRepository {
 
     @Override
     public Plan joinPlan(String planId, User user) {
-        UpdateResult result = mongoTemplate.updateFirst(query(where("plans.$id").is(planId)),
-                new Update().push("planUsers", user),
+        UpdateResult result = mongoTemplate.updateFirst(query(where("plans.id").is(planId)),
+                new Update().push("plans.$[].planUsers", user),
                 ChatRoom.class);
 
         if (result.getMatchedCount() != 1) {
             throw ChatRoomNotFoundException.EXCEPTION;
         }
 
-        List<Plan> plans = mongoTemplate.findOne(query(where("plans.$id").is(planId)),
+        List<Plan> plans = mongoTemplate.findOne(query(where("plans.id").is(planId)),
                 ChatRoom.class).getPlans();
 
         return plans.stream()
