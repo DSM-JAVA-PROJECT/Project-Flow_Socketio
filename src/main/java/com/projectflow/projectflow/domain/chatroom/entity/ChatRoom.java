@@ -24,7 +24,7 @@ public class ChatRoom {
     @NotBlank
     private String name;
 
-    @DBRef(lazy = true)
+    @DBRef
     private List<User> userIds;
 
     private List<Plan> plans;
