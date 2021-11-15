@@ -10,6 +10,7 @@ import com.projectflow.projectflow.domain.plan.entity.CustomPlanRepository;
 import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.plan.exceptions.AlreadyPlanParticipateException;
 import com.projectflow.projectflow.domain.plan.exceptions.NotPlanMemberException;
+import com.projectflow.projectflow.domain.plan.exceptions.PlanNotFoundException;
 import com.projectflow.projectflow.domain.plan.payload.CreatePlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.JoinPlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.ResignPlanRequest;
@@ -71,10 +72,23 @@ public class PlanServiceImpl implements PlanService {
     @Transactional
     @Override
     public Plan resignPlan(ResignPlanRequest request, User user) {
-        Plan plan = planRepository.findById(request.getPlanId());
+        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(request.getChatRoomId()))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+
+        Plan plan = chatRoom.getPlans().stream()
+                .filter(plan1 -> plan1.getId().toString().equals(request.getPlanId()))
+                .findFirst()
+                .orElseThrow(() -> PlanNotFoundException.EXCEPTION);
+
         validatePlanMember(plan, user);
+
         plan.getPlanUsers().removeIf(planUser -> planUser.getUser().equals(user));
-        return plan;
+        ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
+
+        return savedChatRoom.getPlans().stream()
+                .filter(plan1 -> plan1.getId().toString().equals(request.getPlanId()))
+                .findFirst()
+                .orElseThrow(() -> PlanNotFoundException.EXCEPTION);
     }
 
     private Plan buildPlan(CreatePlanRequest request, List<User> users) {
@@ -113,7 +127,8 @@ public class PlanServiceImpl implements PlanService {
     }
 
     private void validateAlreadyPlanParticipated(Plan plan, User user) {
-        if (plan.getPlanUsers().stream().noneMatch(planUser -> planUser.getUser().equals(user))) {
+        if (plan.getPlanUsers().isEmpty() ||
+                plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user))) {
             throw AlreadyPlanParticipateException.EXCEPTION;
         }
     }
