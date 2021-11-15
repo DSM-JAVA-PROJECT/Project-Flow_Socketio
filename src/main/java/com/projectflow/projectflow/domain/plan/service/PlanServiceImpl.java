@@ -68,7 +68,7 @@ public class PlanServiceImpl implements PlanService {
         validateAlreadyPlanParticipated(plan, user);
         Plan updatedPlan = planRepository.joinPlan(request.getPlanId(), user);
 
-        return plan;
+        return updatedPlan;
     }
 
     @Transactional
