@@ -66,9 +66,8 @@ public class PlanServiceImpl implements PlanService {
         validateChatRoomMember(request.getChatRoomId(), user);
         Plan plan = planRepository.findById(request.getPlanId());
         validateAlreadyPlanParticipated(plan, user);
-        Plan updatedPlan = planRepository.joinPlan(request.getPlanId(), user);
 
-        return updatedPlan;
+        return planRepository.joinPlan(request.getPlanId(), user);
     }
 
     @Transactional
@@ -129,7 +128,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     private void validateAlreadyPlanParticipated(Plan plan, User user) {
-        if (plan.getPlanUsers().isEmpty() ||
+        if (!plan.getPlanUsers().isEmpty() &&
                 plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user))) {
             throw AlreadyPlanParticipateException.EXCEPTION;
         }
