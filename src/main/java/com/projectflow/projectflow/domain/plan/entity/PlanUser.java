@@ -17,4 +17,9 @@ public class PlanUser {
 
     private boolean isFinished;
 
+    public PlanUser(User user) {
+        this.user = user;
+        this.isFinished = false;
+    }
+
 }
