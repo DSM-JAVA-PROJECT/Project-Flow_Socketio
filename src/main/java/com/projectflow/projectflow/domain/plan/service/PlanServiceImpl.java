@@ -40,12 +40,12 @@ public class PlanServiceImpl implements PlanService {
     @Transactional
     @Override
     public Plan createPlan(CreatePlanRequest request, User user) {
-        validateChatRoomMember(request.getChatRoomId(), user);
-
         List<User> users = new ArrayList<>();
 
         ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(request.getChatRoomId()))
                 .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+
+        validateChatRoomMember(chatRoom, user);
 
         if (request.isForced()) {
             users = chatRoom.getUserIds();
@@ -63,7 +63,10 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public Plan joinPlan(JoinPlanRequest request, User user) {
-        validateChatRoomMember(request.getChatRoomId(), user);
+        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(request.getChatRoomId()))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+
+        validateChatRoomMember(chatRoom, user);
         Plan plan = planRepository.findById(request.getPlanId());
         validateAlreadyPlanParticipated(plan, user);
 
@@ -121,10 +124,11 @@ public class PlanServiceImpl implements PlanService {
         }
     }
 
-    private void validateChatRoomMember(String chatRoomId, User user) {
-        if (!chatRoomRepository.isChatRoomMember(chatRoomId, user)) {
-            throw NotChatRoomMemberException.EXCEPTION;
-        }
+    private void validateChatRoomMember(ChatRoom chatRoom, User user) {
+        chatRoom.getUserIds()
+                .stream().filter(user1 -> user1.equals(user))
+                .findFirst()
+                .orElseThrow(() -> NotChatRoomMemberException.EXCEPTION);
     }
 
     private void validateAlreadyPlanParticipated(Plan plan, User user) {
