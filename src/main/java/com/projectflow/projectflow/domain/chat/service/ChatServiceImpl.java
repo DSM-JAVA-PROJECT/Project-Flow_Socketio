@@ -1,5 +1,6 @@
 package com.projectflow.projectflow.domain.chat.service;
 
+import com.mongodb.DBRef;
 import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.entity.ChatRepository;
 import com.projectflow.projectflow.domain.chat.exceptions.UserNotMessageOwnerException;
@@ -19,11 +20,16 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
 @RequiredArgsConstructor
 @Service
@@ -33,6 +39,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final AuthenticationFacade authenticationFacade;
     private final CustomPlanRepository customPlanRepository;
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public Chat saveMessage(ChatRequest request, User user) {
@@ -54,12 +61,13 @@ public class ChatServiceImpl implements ChatService {
     public OldChatMessageListResponse getOldChatMessage(String chatRoomId, Pageable pageable) {
         User user = authenticationFacade.getCurrentUser();
         ChatRoom chatRoom = findChatRoomById(chatRoomId);
+
+        mongoTemplate.updateMulti(query(where("chatRoom")),
+                new Update().pull("readers", new DBRef("chatRoom", user.getId())),
+                Chat.class);
+
         return new OldChatMessageListResponse(
                 chatRepository.findAllByChatRoomOrderByCreatedAtAsc(chatRoom, pageable)
-                        .map(chat -> {
-                            CollectionUtils.emptyIfNull(chat.getReceiver()).remove(user);
-                            return chat;
-                        })
                         .map(chat -> buildResponse(chat, user)).getContent()
         );
     }
