@@ -5,8 +5,6 @@ spring:
       authentication-database: admin
       uri: ${MONGO_URL}
       database: project-flow
-  profiles:
-    active: local
 jwt:
   secret: ${SECRET_KEY}
 socket:
