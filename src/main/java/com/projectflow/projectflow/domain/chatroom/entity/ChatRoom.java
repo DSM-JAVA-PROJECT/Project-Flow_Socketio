@@ -38,4 +38,12 @@ public class ChatRoom {
         this.plans = new ArrayList<>();
         this.profileImage = profileImage;
     }
+
+    public void updateChatRoomImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void updateChatRoomName(String name) {
+        this.name = name;
+    }
 }
