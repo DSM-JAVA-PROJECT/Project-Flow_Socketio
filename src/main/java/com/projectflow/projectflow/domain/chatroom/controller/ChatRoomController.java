@@ -66,6 +66,12 @@ public class ChatRoomController {
         return roomRestService.getChatRoomMember(chatRoomId);
     }
 
+    @PatchMapping("/chatroom/image/{chatRoomId}")
+    public void updateChatRoomImage(@PathVariable String chatRoomId,
+                                    @RequestBody ChatRoomImageRequest request) {
+        roomRestService.updateChatRoomImage(chatRoomId, request.getImageUrl());
+    }
+
     @PatchMapping("/chatroom/name/{chatRoomId}")
     public void updateChatRoomName(@PathVariable String chatRoomId,
                                    @RequestBody ChatRoomNameRequest request) {
