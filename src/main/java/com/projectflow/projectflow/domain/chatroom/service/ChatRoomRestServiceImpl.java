@@ -3,11 +3,9 @@ package com.projectflow.projectflow.domain.chatroom.service;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoomRepository;
 import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
+import com.projectflow.projectflow.domain.chatroom.exceptions.NotChatRoomMemberException;
 import com.projectflow.projectflow.domain.chatroom.exceptions.NotProjectMemberException;
-import com.projectflow.projectflow.domain.chatroom.payload.ChatMemberListResponse;
-import com.projectflow.projectflow.domain.chatroom.payload.ChatMemberResponse;
-import com.projectflow.projectflow.domain.chatroom.payload.ChatRoomListResponse;
-import com.projectflow.projectflow.domain.chatroom.payload.ChatRoomResponse;
+import com.projectflow.projectflow.domain.chatroom.payload.*;
 import com.projectflow.projectflow.domain.project.entity.Project;
 import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
 import com.projectflow.projectflow.domain.project.exceptions.ProjectNotFoundException;
@@ -56,6 +54,33 @@ public class ChatRoomRestServiceImpl implements ChatRoomRestService {
                         .build())
                 .collect(Collectors.toList());
         return new ChatRoomListResponse(responses);
+    }
+
+    @Override
+    public void updateChatRoomImage(String chatRoomId, String imageUrl) {
+        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(chatRoomId))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+        validateChatRoomMember(chatRoom);
+        chatRoom.updateChatRoomImage(imageUrl);
+        chatRoomRepository.save(chatRoom);
+    }
+
+    @Override
+    public void updateChatRoomName(String chatRoomId, ChatRoomNameRequest request) {
+        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(chatRoomId))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+
+        validateChatRoomMember(chatRoom);
+        chatRoom.updateChatRoomName(request.getName());
+        chatRoomRepository.save(chatRoom);
+    }
+
+    private void validateChatRoomMember(ChatRoom chatRoom) {
+        User user = authenticationFacade.getCurrentUser();
+        chatRoom.getUserIds()
+                .stream().filter(user::equals)
+                .findFirst()
+                .orElseThrow(() -> NotChatRoomMemberException.EXCEPTION);
     }
 
     private void validateProjectMember(Project project) {
