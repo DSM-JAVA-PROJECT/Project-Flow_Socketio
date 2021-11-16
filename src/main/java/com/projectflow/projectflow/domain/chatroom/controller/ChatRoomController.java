@@ -12,7 +12,9 @@ import com.projectflow.projectflow.global.websocket.annotations.SocketMapping;
 import com.projectflow.projectflow.global.websocket.security.SocketAuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
 @SocketController
@@ -62,6 +64,12 @@ public class ChatRoomController {
     @GetMapping("/chatroom/{chatRoomId}/members")
     public ChatMemberListResponse getMembers(@PathVariable String chatRoomId) {
         return roomRestService.getChatRoomMember(chatRoomId);
+    }
+
+    @PatchMapping("/chatroom/name/{chatRoomId}")
+    public void updateChatRoomName(@PathVariable String chatRoomId,
+                                   @RequestBody ChatRoomNameRequest request) {
+        roomRestService.updateChatRoomName(chatRoomId, request);
     }
 
 }
