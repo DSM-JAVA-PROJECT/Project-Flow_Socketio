@@ -10,6 +10,8 @@ import com.projectflow.projectflow.domain.project.entity.Project;
 import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
 import com.projectflow.projectflow.domain.project.exceptions.ProjectNotFoundException;
 import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.domain.user.entity.UserRepository;
+import com.projectflow.projectflow.global.auth.exceptions.UserNotFoundException;
 import com.projectflow.projectflow.global.auth.facade.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -25,6 +27,7 @@ public class ChatRoomRestServiceImpl implements ChatRoomRestService {
     private final ChatRoomRepository chatRoomRepository;
     private final ProjectRepository projectRepository;
     private final AuthenticationFacade authenticationFacade;
+    private final UserRepository userRepository;
 
     @Override
     public ChatMemberListResponse getChatRoomMember(String chatRoomId) {
@@ -73,6 +76,26 @@ public class ChatRoomRestServiceImpl implements ChatRoomRestService {
         validateChatRoomMember(chatRoom);
         chatRoom.updateChatRoomName(request.getName());
         chatRoomRepository.save(chatRoom);
+    }
+
+    @Override
+    public ChatMemberProfileResponse getUserProfile(String userId) {
+        User user = userRepository.findById(new ObjectId(userId))
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
+        var response = ChatMemberProfileResponse.builder()
+                .phoneNumber(user.getPhoneNumber())
+                .userName(user.getName())
+                .profileImage(user.getProfileImage())
+                .userEmail(user.getEmail())
+                .projectResponses(user.getProjects().stream()
+                        .map(project -> UserProjectResponse.builder()
+                                .projectEndDate(project.getEndDate())
+                                .projectImage(project.getLogoImage())
+                                .projectName(project.getProjectName())
+                                .projectStartDate(project.getStartDate())
+                                .build()).collect(Collectors.toList()))
+                .build();
+        return response;
     }
 
     private void validateChatRoomMember(ChatRoom chatRoom) {

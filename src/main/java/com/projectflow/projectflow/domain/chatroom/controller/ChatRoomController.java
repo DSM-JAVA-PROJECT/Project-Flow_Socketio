@@ -79,4 +79,9 @@ public class ChatRoomController {
         roomRestService.updateChatRoomName(chatRoomId, request);
     }
 
+    @GetMapping("/chatroom/profile/{userId}")
+    public ChatMemberProfileResponse userProfileResponse(@PathVariable String userId) {
+        return roomRestService.getUserProfile(userId);
+    }
+
 }
