@@ -10,7 +10,7 @@ import lombok.*;
 public class RejoinMessage {
 
     @Builder.Default
-    private MessageType type = MessageType.RESIGN_CHATROOM;
+    private MessageType type = MessageType.REJOIN_CHATROOM;
 
     private String userEmail;
 
