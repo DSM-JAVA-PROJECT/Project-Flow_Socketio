@@ -24,4 +24,6 @@ public class UserProjectResponse {
     @DateTimeFormat(pattern = "yyyy.MM.dd")
     private LocalDate projectEndDate;
 
+    private boolean isFinished;
+
 }

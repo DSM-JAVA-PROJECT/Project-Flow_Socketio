@@ -93,6 +93,7 @@ public class ChatRoomRestServiceImpl implements ChatRoomRestService {
                                 .projectImage(project.getLogoImage())
                                 .projectName(project.getProjectName())
                                 .projectStartDate(project.getStartDate())
+                                .isFinished(project.getEndDate() != null)
                                 .build()).collect(Collectors.toList()))
                 .build();
         return response;
