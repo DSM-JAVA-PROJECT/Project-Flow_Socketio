@@ -40,8 +40,9 @@ public class ChatRoomController {
     }
 
     @SocketMapping(endpoint = "chatroom.rejoin", requestCls = JoinChatRoomRequest.class)
-    public void rejoinChatRoom(JoinChatRoomRequest request, SocketIOClient client) {
-        socketService.rejoinChatRoom(request.getChatRoomId(), client);
+    public void rejoinChatRoom(JoinChatRoomRequest request, SocketIOClient client, SocketIOServer server) {
+        User user = authenticationFacade.getCurrentUser(client);
+        socketService.rejoinChatRoom(request.getChatRoomId(), user, client, server);
     }
 
     @SocketMapping(endpoint = "chatroom.out", requestCls = OutChatRoomRequest.class)

@@ -10,6 +10,8 @@ public class SocketProperty {
 
     public static final String JOIN_KEY = "join";
 
+    public static final String REJOIN_KEY = "rejoin";
+
     public static final String RESIGN_KEY = "resign";
 
     public static final String ERROR_KEY = "error";

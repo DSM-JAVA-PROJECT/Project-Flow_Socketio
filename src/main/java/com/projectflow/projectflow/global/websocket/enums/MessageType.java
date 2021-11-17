@@ -6,6 +6,7 @@ public enum MessageType {
     RESIGN_PLAN,
     JOIN_CHATROOM,
     RESIGN_CHATROOM,
+    REJOIN_CHATROOM,
     PICTURE,
     MESSAGE
 }

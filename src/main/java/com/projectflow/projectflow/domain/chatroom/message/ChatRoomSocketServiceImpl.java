@@ -3,6 +3,7 @@ package com.projectflow.projectflow.domain.chatroom.message;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.chatroom.message.payload.JoinMessage;
+import com.projectflow.projectflow.domain.chatroom.message.payload.RejoinMessage;
 import com.projectflow.projectflow.domain.chatroom.message.payload.ResignMessage;
 import com.projectflow.projectflow.domain.chatroom.payload.OutChatRoomRequest;
 import com.projectflow.projectflow.domain.user.entity.User;
@@ -27,8 +28,14 @@ public class ChatRoomSocketServiceImpl implements ChatRoomSocketService {
     }
 
     @Override
-    public void rejoinChatRoom(String chatRoomId, SocketIOClient client) {
+    public void rejoinChatRoom(String chatRoomId, User user, SocketIOClient client, SocketIOServer server) {
+        RejoinMessage message = RejoinMessage.builder()
+                .userEmail(user.getEmail())
+                .build();
         client.joinRoom(chatRoomId);
+
+        server.getRoomOperations(chatRoomId)
+                .sendEvent(SocketProperty.REJOIN_KEY, message);
     }
 
     @Override
