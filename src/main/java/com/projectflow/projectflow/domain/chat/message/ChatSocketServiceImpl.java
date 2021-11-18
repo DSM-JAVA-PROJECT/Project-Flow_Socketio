@@ -42,7 +42,7 @@ public class ChatSocketServiceImpl implements ChatSocketService {
                             .senderName(chat.getSender().getName())
                             .message(chat.getMessage())
                             .isMine(authenticationFacade.getCurrentUser(client).getId().equals(user.getId()))
-                            .readerCount(receiverIds.size())
+                            .size(1)
                             .build();
                     client.sendEvent(SocketProperty.MESSAGE_KEY, message);
                 });

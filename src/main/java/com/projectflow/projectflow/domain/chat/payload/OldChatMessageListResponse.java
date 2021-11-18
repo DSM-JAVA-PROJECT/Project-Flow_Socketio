@@ -11,4 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 public class OldChatMessageListResponse {
     private List<OldChatMessageResponse> oldChatMessageResponses;
+
+    private Integer size;
 }

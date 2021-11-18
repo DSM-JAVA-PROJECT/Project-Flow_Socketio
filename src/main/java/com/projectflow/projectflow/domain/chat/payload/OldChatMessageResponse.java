@@ -40,6 +40,6 @@ public class OldChatMessageResponse {
 
     private String planId;
 
-    private Integer readerCount;
+    private Integer size;
 
 }

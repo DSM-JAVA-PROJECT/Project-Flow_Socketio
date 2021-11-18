@@ -66,10 +66,10 @@ public class ChatServiceImpl implements ChatService {
                 new Update().pull("readers", new DBRef("chatRoom", user.getId())),
                 Chat.class);
 
-        return new OldChatMessageListResponse(
-                chatRepository.findAllByChatRoomOrderByCreatedAtAsc(chatRoom, pageable)
-                        .map(chat -> buildResponse(chat, user)).getContent()
-        );
+        List<OldChatMessageResponse> responses = chatRepository.findAllByChatRoomOrderByCreatedAtAsc(chatRoom, pageable)
+                .map(chat -> buildResponse(chat, user)).getContent();
+
+        return new OldChatMessageListResponse(responses, responses.size());
     }
 
     private OldChatMessageResponse buildResponse(Chat chat, User user) {
@@ -99,7 +99,6 @@ public class ChatServiceImpl implements ChatService {
                 .endDate(endDate)
                 .startDate(startDate)
                 .type(chat.getMessageType())
-                .readerCount(chat.getReceiver().size())
                 .build();
     }
 
