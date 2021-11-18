@@ -99,6 +99,7 @@ public class ChatServiceImpl implements ChatService {
                 .endDate(endDate)
                 .startDate(startDate)
                 .type(chat.getMessageType())
+                .readerCount(chat.getReceiver().size())
                 .build();
     }
 
