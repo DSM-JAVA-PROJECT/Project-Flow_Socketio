@@ -26,6 +26,8 @@ public class ChatMessage {
 
     private List<String> readerList;
 
+    private Integer readerCount;
+
     private boolean isMine;
 
     private String createdAt;
