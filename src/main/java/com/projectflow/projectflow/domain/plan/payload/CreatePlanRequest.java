@@ -24,6 +24,6 @@ public class CreatePlanRequest {
     @NotBlank
     private String planStartDate;
 
-    private boolean isForced;
+    private Boolean isForced;
 
 }

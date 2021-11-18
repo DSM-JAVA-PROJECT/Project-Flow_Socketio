@@ -47,14 +47,14 @@ public class PlanServiceImpl implements PlanService {
 
         validateChatRoomMember(chatRoom, user);
 
-        if (request.isForced()) {
+        if (request.getIsForced()) {
             users = chatRoom.getUserIds();
         }
 
         Plan unsavedPlan = buildPlan(request, users);
         Plan plan = planRepository.savePlan(request.getChatRoomId(), unsavedPlan);
 
-        Chat unsavedChat = buildPlanChat(chatRoom, plan, user);
+        Chat unsavedChat = buildCreatePlanChat(chatRoom, plan, user);
         chatRepository.save(unsavedChat);
 
         return plan;
@@ -69,6 +69,9 @@ public class PlanServiceImpl implements PlanService {
         validateChatRoomMember(chatRoom, user);
         Plan plan = planRepository.findById(request.getPlanId());
         validateAlreadyPlanParticipated(plan, user);
+
+        Chat unsavedChat = buildJoinPlanChat(chatRoom, plan, user);
+        chatRepository.save(unsavedChat);
 
         return planRepository.joinPlan(request.getPlanId(), user);
     }
@@ -89,6 +92,9 @@ public class PlanServiceImpl implements PlanService {
         plan.getPlanUsers().removeIf(planUser -> planUser.getUser().equals(user));
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
+        Chat unsavedChat = buildResignPlanChat(chatRoom, plan, user);
+        chatRepository.save(unsavedChat);
+
         return savedChatRoom.getPlans().stream()
                 .filter(plan1 -> plan1.getId().toString().equals(request.getPlanId()))
                 .findFirst()
@@ -105,7 +111,7 @@ public class PlanServiceImpl implements PlanService {
                 .build();
     }
 
-    private Chat buildPlanChat(ChatRoom chatRoom, Plan plan, User user) {
+    private Chat buildCreatePlanChat(ChatRoom chatRoom, Plan plan, User user) {
         List<User> receivers = chatRoom.getUserIds();
         CollectionUtils.emptyIfNull(receivers).remove(user);
 
@@ -115,6 +121,32 @@ public class PlanServiceImpl implements PlanService {
                 .chatRoom(chatRoom)
                 .sender(user)
                 .messageType(MessageType.PLAN)
+                .build();
+    }
+
+    private Chat buildJoinPlanChat(ChatRoom chatRoom, Plan plan, User user) {
+        List<User> receivers = chatRoom.getUserIds();
+        CollectionUtils.emptyIfNull(receivers).remove(user);
+
+        return Chat.builder()
+                .planId(plan.getId().toString())
+                .receiver(receivers)
+                .chatRoom(chatRoom)
+                .sender(user)
+                .messageType(MessageType.JOIN_PLAN)
+                .build();
+    }
+
+    private Chat buildResignPlanChat(ChatRoom chatRoom, Plan plan, User user) {
+        List<User> receivers = chatRoom.getUserIds();
+        CollectionUtils.emptyIfNull(receivers).remove(user);
+
+        return Chat.builder()
+                .planId(plan.getId().toString())
+                .receiver(receivers)
+                .chatRoom(chatRoom)
+                .sender(user)
+                .messageType(MessageType.RESIGN_PLAN)
                 .build();
     }
 
