@@ -21,6 +21,7 @@ public class MvcSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable().and()
                 .csrf().disable()
                 .formLogin().disable()
+                .cors().and()
                 .apply(new JwtConfigure(validator))
                 .and()
                 .authorizeRequests()
