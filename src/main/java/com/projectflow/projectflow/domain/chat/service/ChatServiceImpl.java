@@ -70,7 +70,7 @@ public class ChatServiceImpl implements ChatService {
         Page<OldChatMessageResponse> responses = chatRepository.findAllByChatRoomOrderByCreatedAtAsc(chatRoom, pageable)
                 .map(chat -> buildResponse(chat, user));
 
-        return new OldChatMessageListResponse(responses.getContent(), responses.getNumberOfElements(), responses.getTotalPages() == pageable.getPageSize());
+        return new OldChatMessageListResponse(responses.getContent(), responses.getNumberOfElements(), responses.getTotalPages() - 1 == pageable.getPageSize());
     }
 
     private OldChatMessageResponse buildResponse(Chat chat, User user) {
