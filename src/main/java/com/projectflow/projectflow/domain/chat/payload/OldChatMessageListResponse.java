@@ -13,4 +13,6 @@ public class OldChatMessageListResponse {
     private List<OldChatMessageResponse> oldChatMessageResponses;
 
     private Integer size;
+
+    private Boolean hasNextPage;
 }

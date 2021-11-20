@@ -19,6 +19,7 @@ import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Update;
@@ -66,10 +67,10 @@ public class ChatServiceImpl implements ChatService {
                 new Update().pull("readers", new DBRef("chatRoom", user.getId())),
                 Chat.class);
 
-        List<OldChatMessageResponse> responses = chatRepository.findAllByChatRoomOrderByCreatedAtAsc(chatRoom, pageable)
-                .map(chat -> buildResponse(chat, user)).getContent();
+        Page<OldChatMessageResponse> responses = chatRepository.findAllByChatRoomOrderByCreatedAtAsc(chatRoom, pageable)
+                .map(chat -> buildResponse(chat, user));
 
-        return new OldChatMessageListResponse(responses, responses.size());
+        return new OldChatMessageListResponse(responses.getContent(), responses.getNumberOfElements(), responses.getTotalPages() == pageable.getPageSize());
     }
 
     private OldChatMessageResponse buildResponse(Chat chat, User user) {
