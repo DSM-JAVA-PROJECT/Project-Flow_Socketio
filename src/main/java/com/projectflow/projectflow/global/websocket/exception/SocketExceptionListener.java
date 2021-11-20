@@ -25,8 +25,8 @@ public class SocketExceptionListener implements ExceptionListener {
 
     @Override
     public void onConnectException(Exception e, SocketIOClient client) {
+        client.disconnect();    
         runExceptionHandling(e, client);
-        client.disconnect();
     }
 
     @Override

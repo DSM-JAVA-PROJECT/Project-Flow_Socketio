@@ -27,8 +27,8 @@ public class ChatSocketServiceImpl implements ChatSocketService {
                     List<User> receivers = chat.getReceiver();
 
                     receivers.removeIf(user1 -> server.getAllClients()
-                            .stream().map(client1 -> (User) client1.get("userInfo"))
-                            .anyMatch(user2 -> user2.equals(user1)));
+                            .stream().map(client1 -> client1.get("userInfo"))
+                            .anyMatch(user2 -> user2.equals(user1.getEmail())));
 
                     List<String> receiverIds = receivers.stream()
                             .map(User::getId).map(ObjectId::toString)
