@@ -15,6 +15,7 @@ import com.projectflow.projectflow.domain.plan.entity.CustomPlanRepository;
 import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.auth.facade.AuthenticationFacade;
+import com.projectflow.projectflow.global.fcm.FcmFacade;
 import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -40,12 +41,14 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final AuthenticationFacade authenticationFacade;
     private final CustomPlanRepository customPlanRepository;
+    private final FcmFacade fcmFacade;
     private final MongoTemplate mongoTemplate;
 
     @Override
     public Chat saveMessage(ChatRequest request, User user) {
         validateChatRoom(request.getChatRoomId(), user);
         ChatRoom chatRoom = findChatRoomById(request.getChatRoomId());
+        fcmFacade.sendFcmMessage(chatRoom.getUserIds(), user.getName(), request.getMessage(), MessageType.MESSAGE,  user.getProfileImage());
         return chatRepository.save(buildChat(chatRoom, user, request.getMessage()));
     }
 

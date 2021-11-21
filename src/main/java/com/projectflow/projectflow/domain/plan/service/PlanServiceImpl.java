@@ -15,6 +15,7 @@ import com.projectflow.projectflow.domain.plan.payload.CreatePlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.JoinPlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.ResignPlanRequest;
 import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.global.fcm.FcmFacade;
 import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -36,6 +37,7 @@ public class PlanServiceImpl implements PlanService {
     private final CustomPlanRepository planRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRepository chatRepository;
+    private final FcmFacade fcmFacade;
 
     @Transactional
     @Override
@@ -57,6 +59,8 @@ public class PlanServiceImpl implements PlanService {
         Chat unsavedChat = buildCreatePlanChat(chatRoom, plan, user);
         chatRepository.save(unsavedChat);
 
+        fcmFacade.sendFcmMessage(chatRoom.getUserIds(), user.getName(), request.getPlanName() + " 일정을 추가했습니다.", MessageType.PLAN,  user.getProfileImage());
+
         return plan;
     }
 
@@ -72,6 +76,7 @@ public class PlanServiceImpl implements PlanService {
 
         Chat unsavedChat = buildJoinPlanChat(chatRoom, plan, user);
         chatRepository.save(unsavedChat);
+        fcmFacade.sendFcmMessage(chatRoom.getUserIds(), user.getName(), plan.getName() + " 일정에 참여했습니다.", MessageType.JOIN_PLAN,  user.getProfileImage());
 
         return planRepository.joinPlan(request.getPlanId(), user);
     }
@@ -93,6 +98,7 @@ public class PlanServiceImpl implements PlanService {
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
         Chat unsavedChat = buildResignPlanChat(chatRoom, plan, user);
+        fcmFacade.sendFcmMessage(chatRoom.getUserIds(), user.getName(), plan.getName() + " 일정에 탈퇴했습니다.", MessageType.RESIGN_PLAN,  user.getProfileImage());
         chatRepository.save(unsavedChat);
 
         return savedChatRoom.getPlans().stream()

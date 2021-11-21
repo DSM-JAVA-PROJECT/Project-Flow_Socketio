@@ -10,6 +10,8 @@ import com.projectflow.projectflow.domain.project.entity.Project;
 import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.domain.user.entity.facade.UserFacade;
+import com.projectflow.projectflow.global.fcm.FcmFacade;
+import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ProjectRepository projectRepository;
     private final UserFacade userFacade;
+    private final FcmFacade fcmFacade;
 
     @Transactional
     @Override
@@ -44,6 +47,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     public void joinChatRoom(String chatRoomId, User user) {
         validateNotChatRoomMember(chatRoomId, user);
+        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(chatRoomId))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+        fcmFacade.sendFcmMessage(chatRoom.getUserIds(), user.getName(), chatRoom.getName() + " 채팅방에 참여했습니다.", MessageType.JOIN_CHATROOM, user.getProfileImage());
         chatRoomRepository.joinChatRoom(chatRoomId, user);
     }
 

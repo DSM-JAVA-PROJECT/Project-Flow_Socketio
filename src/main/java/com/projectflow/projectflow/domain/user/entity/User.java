@@ -40,6 +40,8 @@ public class User {
     @DBRef(lazy = true)
     private List<Project> projects;
 
+    private String deviceToken;
+
     @Builder
     private User(String email, String name, String password, String profileImage, String phoneNumber) {
         this.email = email;

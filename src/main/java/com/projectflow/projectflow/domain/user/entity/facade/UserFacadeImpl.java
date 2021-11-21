@@ -5,6 +5,7 @@ import com.projectflow.projectflow.domain.user.entity.UserRepository;
 import com.projectflow.projectflow.global.auth.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -20,7 +21,8 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public User getUserByEmail(String email) {
+    public User getCurrentUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> UserNotFoundException.EXCEPTION);
     }
