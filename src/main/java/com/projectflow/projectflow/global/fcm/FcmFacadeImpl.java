@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class FcmFacadeImpl implements FcmFacade {
 
     private final UserFacade userFacade;
-    private static final String path = "gramo-notice-notify-firebase-adminsdk-2njk9-362233e743.json";
+    private static final String path = "google-services.json";
 
     @PostConstruct
     public void init() {
