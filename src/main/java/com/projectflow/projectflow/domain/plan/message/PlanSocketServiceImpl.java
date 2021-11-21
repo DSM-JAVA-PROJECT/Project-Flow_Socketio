@@ -7,6 +7,7 @@ import com.projectflow.projectflow.domain.plan.message.payload.JoinPlanMessage;
 import com.projectflow.projectflow.domain.plan.message.payload.ResignPlanMessage;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.SocketProperty;
+import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import com.projectflow.projectflow.global.websocket.security.AuthenticationProperty;
 import com.projectflow.projectflow.global.websocket.security.SocketAuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class PlanSocketServiceImpl implements PlanSocketService {
      * @Param 저장된 Plan
      * plan을 채팅방에 전송할 message로 변환해서 반환해 준다.
      */
-    private CreatePlanMessage buildCreatePlanResponse(Plan plan, User user) {
+    private CreatePlanMessage buildCreatePlanResponse(Plan plan, User user, Boolean isForced) {
         return CreatePlanMessage.builder()
                 .createdAt(plan.getCreatedAt().toString())
                 .planId(plan.getId().toString())
@@ -58,6 +59,8 @@ public class PlanSocketServiceImpl implements PlanSocketService {
                 .startDate(plan.getStartDate().toString())
                 .senderImage(user.getProfileImage())
                 .senderName(user.getName())
+                .isMine(true)
+                .type(isForced ? MessageType.FORCED_PLAN : MessageType.PLAN)
                 .build();
     }
 
