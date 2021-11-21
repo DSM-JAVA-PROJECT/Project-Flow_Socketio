@@ -20,8 +20,8 @@ public class PlanSocketServiceImpl implements PlanSocketService {
     private final SocketAuthenticationFacade authenticationFacade;
 
     @Override
-    public void sendCreatePlanMessage(String chatRoomId, Plan plan, User user, SocketIOServer server) {
-        var message = buildCreatePlanResponse(plan, user);
+    public void sendCreatePlanMessage(String chatRoomId, Plan plan, User user, SocketIOServer server, Boolean isForced) {
+        var message = buildCreatePlanResponse(plan, user, isForced);
         server.getRoomOperations(chatRoomId)
                 .sendEvent(SocketProperty.CREATE_PLAN_KEY, message);
     }

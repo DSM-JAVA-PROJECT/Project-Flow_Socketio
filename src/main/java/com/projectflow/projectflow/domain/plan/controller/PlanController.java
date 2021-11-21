@@ -26,7 +26,7 @@ public class PlanController {
     public void createPlan(SocketIOClient client, SocketIOServer server, CreatePlanRequest request) {
         User user = authenticationFacade.getCurrentUser(client);
         Plan plan = planService.createPlan(request, user);
-        planSocketService.sendCreatePlanMessage(request.getChatRoomId(), plan, user, server);
+        planSocketService.sendCreatePlanMessage(request.getChatRoomId(), plan, user, server, request.getIsForced());
     }
 
     @SocketMapping(endpoint = "plan.join", requestCls = JoinPlanRequest.class)
