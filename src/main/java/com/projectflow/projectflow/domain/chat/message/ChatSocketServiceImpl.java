@@ -35,6 +35,7 @@ public class ChatSocketServiceImpl implements ChatSocketService {
                             .collect(Collectors.toList());
 
                     ChatMessage message = ChatMessage.builder()
+                            .type(chat.getMessageType())
                             .id(chat.getId().toString())
                             .createdAt(chat.getCreatedAt().toString())
                             .readerList(receiverIds)

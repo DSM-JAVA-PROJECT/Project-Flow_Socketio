@@ -5,6 +5,7 @@ import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.entity.ChatRepository;
 import com.projectflow.projectflow.domain.chat.exceptions.UserNotMessageOwnerException;
 import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
+import com.projectflow.projectflow.domain.chat.payload.ImageChatRequest;
 import com.projectflow.projectflow.domain.chat.payload.OldChatMessageListResponse;
 import com.projectflow.projectflow.domain.chat.payload.OldChatMessageResponse;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
@@ -50,6 +51,14 @@ public class ChatServiceImpl implements ChatService {
         ChatRoom chatRoom = findChatRoomById(request.getChatRoomId());
         fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), request.getMessage(), MessageType.MESSAGE,  user.getProfileImage());
         return chatRepository.save(buildChat(chatRoom, user, request.getMessage()));
+    }
+
+    @Override
+    public Chat saveImageMessage(ImageChatRequest request, User user) {
+        validateChatRoom(request.getChatRoomId(), user);
+        ChatRoom chatRoom = findChatRoomById(request.getChatRoomId());
+        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), "이미지가 전송되었습니다.", MessageType.PICTURE, user.getProfileImage());
+        return chatRepository.save(buildChat(chatRoom, user, request.getImageUrl()));
     }
 
     @Override

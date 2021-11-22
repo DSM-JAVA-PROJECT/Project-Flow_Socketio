@@ -31,6 +31,13 @@ public class ChatController {
         socketService.sendChatMessage(chat, request.getChatRoomId(), user, server);
     }
 
+    @SocketMapping(endpoint = "message.image", requestCls = ChatRequest.class)
+    public void sendImageMessage(SocketIOClient client, SocketIOServer server, ChatRequest request) {
+        User user = authenticationFacade.getCurrentUser(client);
+        Chat chat = chatService.saveMessage(request, user);
+        socketService.sendChatMessage(chat, request.getChatRoomId(), user, server);
+    }
+
     @GetMapping("/chat/{chatRoomId}")
     public OldChatMessageListResponse getOldMessage(@PathVariable String chatRoomId, Pageable pageable) {
         return chatService.getOldChatMessage(chatRoomId, pageable);
