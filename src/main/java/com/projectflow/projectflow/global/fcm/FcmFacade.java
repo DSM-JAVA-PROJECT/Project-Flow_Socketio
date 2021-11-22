@@ -6,5 +6,5 @@ import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import java.util.List;
 
 public interface FcmFacade {
-    void sendFcmMessage(List<User> users, String title, String content, MessageType type, String profileImage);
+    void sendFcmMessageOnSocket(User sender, List<User> users, String title, String content, MessageType type, String profileImage);
 }

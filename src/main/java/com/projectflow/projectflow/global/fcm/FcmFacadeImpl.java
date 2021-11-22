@@ -7,7 +7,6 @@ import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.MulticastMessage;
 import com.projectflow.projectflow.domain.user.entity.User;
-import com.projectflow.projectflow.domain.user.entity.facade.UserFacade;
 import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FcmFacadeImpl implements FcmFacade {
 
-    private final UserFacade userFacade;
     private static final String path = "google-services.json";
 
     @PostConstruct
@@ -44,8 +42,8 @@ public class FcmFacadeImpl implements FcmFacade {
     }
 
     @Override
-    public void sendFcmMessage(List<User> users, String title, String content, MessageType type, String profileImage) {
-        users.remove(userFacade.getCurrentUser());
+    public void sendFcmMessageOnSocket(User sender, List<User> users, String title, String content, MessageType type, String profileImage) {
+        users.remove(sender);
         var fcm = MulticastMessage.builder()
                 .setAndroidConfig(AndroidConfig.builder()
                         .putData("title", title)
