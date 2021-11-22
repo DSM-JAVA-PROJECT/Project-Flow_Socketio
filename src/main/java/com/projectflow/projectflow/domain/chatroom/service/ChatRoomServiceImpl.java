@@ -49,7 +49,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         validateNotChatRoomMember(chatRoomId, user);
         ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(chatRoomId))
                 .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
-        fcmFacade.sendFcmMessage(chatRoom.getUserIds(), user.getName(), chatRoom.getName() + " 채팅방에 참여했습니다.", MessageType.JOIN_CHATROOM, user.getProfileImage());
+        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), chatRoom.getName() + " 채팅방에 참여했습니다.", MessageType.JOIN_CHATROOM, user.getProfileImage());
         chatRoomRepository.joinChatRoom(chatRoomId, user);
     }
 

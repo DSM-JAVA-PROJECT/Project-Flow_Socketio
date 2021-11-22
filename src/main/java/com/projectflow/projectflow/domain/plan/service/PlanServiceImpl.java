@@ -59,7 +59,7 @@ public class PlanServiceImpl implements PlanService {
         Chat unsavedChat = buildCreatePlanChat(chatRoom, plan, user);
         chatRepository.save(unsavedChat);
 
-        fcmFacade.sendFcmMessage(chatRoom.getUserIds(), user.getName(), request.getPlanName() + " 일정을 추가했습니다.", MessageType.PLAN,  user.getProfileImage());
+        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), request.getPlanName() + " 일정을 추가했습니다.", MessageType.PLAN,  user.getProfileImage());
 
         return plan;
     }
@@ -76,7 +76,7 @@ public class PlanServiceImpl implements PlanService {
 
         Chat unsavedChat = buildJoinPlanChat(chatRoom, plan, user);
         chatRepository.save(unsavedChat);
-        fcmFacade.sendFcmMessage(chatRoom.getUserIds(), user.getName(), plan.getName() + " 일정에 참여했습니다.", MessageType.JOIN_PLAN,  user.getProfileImage());
+        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), plan.getName() + " 일정에 참여했습니다.", MessageType.JOIN_PLAN,  user.getProfileImage());
 
         return planRepository.joinPlan(request.getPlanId(), user);
     }
@@ -98,7 +98,7 @@ public class PlanServiceImpl implements PlanService {
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
         Chat unsavedChat = buildResignPlanChat(chatRoom, plan, user);
-        fcmFacade.sendFcmMessage(chatRoom.getUserIds(), user.getName(), plan.getName() + " 일정에 탈퇴했습니다.", MessageType.RESIGN_PLAN,  user.getProfileImage());
+        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), plan.getName() + " 일정에 탈퇴했습니다.", MessageType.RESIGN_PLAN,  user.getProfileImage());
         chatRepository.save(unsavedChat);
 
         return savedChatRoom.getPlans().stream()
