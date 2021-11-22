@@ -16,7 +16,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileResponse uploadFile(MultipartFile file) throws IOException {
-        String imageUrl = s3Utils.upload(file, "/images");
+        String imageUrl = s3Utils.upload(file, "images/");
         return new FileResponse(imageUrl);
     }
 }
