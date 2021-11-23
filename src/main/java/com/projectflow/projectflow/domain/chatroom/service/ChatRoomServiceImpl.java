@@ -6,6 +6,7 @@ import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundEx
 import com.projectflow.projectflow.domain.chatroom.exceptions.NotChatRoomMemberException;
 import com.projectflow.projectflow.domain.chatroom.exceptions.NotProjectMemberException;
 import com.projectflow.projectflow.domain.chatroom.payload.CreateChatRoomRequest;
+import com.projectflow.projectflow.domain.chatroom.payload.ParticipateChatRoomRequest;
 import com.projectflow.projectflow.domain.project.entity.Project;
 import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
 import com.projectflow.projectflow.domain.user.entity.User;
@@ -45,12 +46,16 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public void joinChatRoom(String chatRoomId, User user) {
-        validateNotChatRoomMember(chatRoomId, user);
-        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(chatRoomId))
+    public void joinChatRoom(ParticipateChatRoomRequest request) {
+        User user = userFacade.getUserById(request.getUserId());
+
+        validateNotChatRoomMember(request.getChatRoomId(), user);
+
+        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(request.getChatRoomId()))
                 .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+
         fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), chatRoom.getName() + " 채팅방에 참여했습니다.", MessageType.JOIN_CHATROOM, user.getProfileImage());
-        chatRoomRepository.joinChatRoom(chatRoomId, user);
+        chatRoomRepository.joinChatRoom(request.getChatRoomId(), user);
     }
 
     @Override

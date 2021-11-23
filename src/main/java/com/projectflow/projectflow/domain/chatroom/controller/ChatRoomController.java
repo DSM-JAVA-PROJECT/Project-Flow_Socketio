@@ -57,6 +57,11 @@ public class ChatRoomController {
         socketService.resignChatRoom(request.getChatRoomId(), user, client, server);
     }
 
+    @SocketMapping(endpoint = "chatroom.participate", requestCls = ParticipateChatRoomRequest.class)
+    public void participateChatRoom(ParticipateChatRoomRequest request, SocketIOClient client, SocketIOServer server) {
+        chatRoomService.joinChatRoom(request);
+    }
+
     @GetMapping("/chatroom/{projectId}/rooms")
     public ChatRoomListResponse getChatRoom(@PathVariable String projectId) {
         return roomRestService.getChatRooms(projectId);
