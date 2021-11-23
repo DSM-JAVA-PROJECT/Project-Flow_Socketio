@@ -5,6 +5,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.message.ChatSocketService;
 import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
+import com.projectflow.projectflow.domain.chat.payload.ImageChatRequest;
 import com.projectflow.projectflow.domain.chat.payload.OldChatMessageListResponse;
 import com.projectflow.projectflow.domain.chat.service.ChatService;
 import com.projectflow.projectflow.domain.user.entity.User;
@@ -31,10 +32,10 @@ public class ChatController {
         socketService.sendChatMessage(chat, request.getChatRoomId(), user, server);
     }
 
-    @SocketMapping(endpoint = "message.image", requestCls = ChatRequest.class)
-    public void sendImageMessage(SocketIOClient client, SocketIOServer server, ChatRequest request) {
+    @SocketMapping(endpoint = "message.image", requestCls = ImageChatRequest.class)
+    public void sendImageMessage(SocketIOClient client, SocketIOServer server, ImageChatRequest request) {
         User user = authenticationFacade.getCurrentUser(client);
-        Chat chat = chatService.saveMessage(request, user);
+        Chat chat = chatService.saveImageMessage(request, user);
         socketService.sendChatMessage(chat, request.getChatRoomId(), user, server);
     }
 

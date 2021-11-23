@@ -48,8 +48,6 @@ public class Project {
 
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    private List<Plan> plans;
-
     private boolean isFinished;
 
     @NotBlank
