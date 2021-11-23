@@ -6,7 +6,7 @@ import com.projectflow.projectflow.domain.chatroom.payload.OutChatRoomRequest;
 import com.projectflow.projectflow.domain.user.entity.User;
 
 public interface ChatRoomSocketService {
-    void joinChatRoom(String chatRoomId, User user, SocketIOClient client, SocketIOServer server);
+    void joinChatRoom(String chatRoomId, String userId, SocketIOClient client, SocketIOServer server);
 
     void rejoinChatRoom(String chatRoomId, User user, SocketIOClient client, SocketIOServer server);
 

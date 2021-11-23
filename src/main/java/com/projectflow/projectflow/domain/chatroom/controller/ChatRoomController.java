@@ -53,6 +53,7 @@ public class ChatRoomController {
     @SocketMapping(endpoint = "chatroom.participate", requestCls = ParticipateChatRoomRequest.class)
     public void participateChatRoom(ParticipateChatRoomRequest request, SocketIOClient client, SocketIOServer server) {
         chatRoomService.joinChatRoom(request);
+        socketService.joinChatRoom(request.getChatRoomId(), request.getUserId(), client, server);
     }
 
     @GetMapping("/chatroom/{projectId}/rooms")

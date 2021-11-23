@@ -7,13 +7,20 @@ import com.projectflow.projectflow.domain.chatroom.message.payload.RejoinMessage
 import com.projectflow.projectflow.domain.chatroom.message.payload.ResignMessage;
 import com.projectflow.projectflow.domain.chatroom.payload.OutChatRoomRequest;
 import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.domain.user.entity.facade.UserFacade;
 import com.projectflow.projectflow.global.websocket.SocketProperty;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class ChatRoomSocketServiceImpl implements ChatRoomSocketService {
+
+    private final UserFacade userFacade;
+
     @Override
-    public void joinChatRoom(String chatRoomId, User user, SocketIOClient client, SocketIOServer server) {
+    public void joinChatRoom(String chatRoomId, String userId, SocketIOClient client, SocketIOServer server) {
+        User user = userFacade.getUserById(userId);
         client.joinRoom(chatRoomId);
 
         JoinMessage message = JoinMessage.builder()
