@@ -10,6 +10,7 @@ import com.projectflow.projectflow.domain.chatroom.payload.ParticipateChatRoomRe
 import com.projectflow.projectflow.domain.project.entity.Project;
 import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
 import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.domain.user.entity.UserRepository;
 import com.projectflow.projectflow.domain.user.entity.facade.UserFacade;
 import com.projectflow.projectflow.global.fcm.FcmFacade;
 import com.projectflow.projectflow.global.websocket.enums.MessageType;
@@ -27,6 +28,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
     private final UserFacade userFacade;
     private final FcmFacade fcmFacade;
 
@@ -42,7 +44,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatRoom chatRoom = chatRoomRepository.save(unsavedChatRoom);
 
         project.getChatRooms().add(chatRoom);
-        projectRepository.save(project);
+        Project project1 = projectRepository.save(project);
+        user.getProjects().add(project1);
+        userRepository.save(user);
     }
 
     @Override
