@@ -43,16 +43,16 @@ public class FcmFacadeImpl implements FcmFacade {
 
     @Override
     public void sendFcmMessageOnSocket(User sender, List<User> users, String title, String content, MessageType type, String profileImage) {
-        users.remove(sender);
-        var fcm = MulticastMessage.builder()
-                .setAndroidConfig(AndroidConfig.builder()
-                        .putData("title", title)
-                        .putData("body", content)
-                        .putData("click_action", type.toString())
-//                        .putData("image", profileImage)
-                        .build())
-                .addAllTokens(users.stream().map(User::getDeviceToken).collect(Collectors.toList()))
-                .build();
-        FirebaseMessaging.getInstance().sendMulticastAsync(fcm);
+//        users.remove(sender);
+//        var fcm = MulticastMessage.builder()
+//                .setAndroidConfig(AndroidConfig.builder()
+//                        .putData("title", title)
+//                        .putData("body", content)
+//                        .putData("click_action", type.toString())
+////                        .putData("image", profileImage)
+//                        .build())
+//                .addAllTokens(users.stream().map(User::getDeviceToken).collect(Collectors.toList()))
+//                .build();
+//        FirebaseMessaging.getInstance().sendMulticastAsync(fcm);
     }
 }
