@@ -49,7 +49,7 @@ public class FcmFacadeImpl implements FcmFacade {
                         .putData("title", title)
                         .putData("body", content)
                         .putData("click_action", type.toString())
-                        .putData("image", profileImage)
+//                        .putData("image", profileImage)
                         .build())
                 .addAllTokens(users.stream().map(User::getDeviceToken).collect(Collectors.toList()))
                 .build();
