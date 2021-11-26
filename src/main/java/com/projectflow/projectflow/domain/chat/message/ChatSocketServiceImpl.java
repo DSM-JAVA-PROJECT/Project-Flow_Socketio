@@ -5,6 +5,7 @@ import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.message.payload.ChatMessage;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.SocketProperty;
+import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import com.projectflow.projectflow.global.websocket.security.SocketAuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;

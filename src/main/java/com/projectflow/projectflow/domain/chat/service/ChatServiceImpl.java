@@ -49,7 +49,7 @@ public class ChatServiceImpl implements ChatService {
     public Chat saveMessage(ChatRequest request, User user) {
         validateChatRoom(request.getChatRoomId(), user);
         ChatRoom chatRoom = findChatRoomById(request.getChatRoomId());
-        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), request.getMessage(), MessageType.MESSAGE,  user.getProfileImage());
+//        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), request.getMessage(), MessageType.MESSAGE,  user.getProfileImage());
         return chatRepository.save(buildChat(chatRoom, user, request.getMessage()));
     }
 
