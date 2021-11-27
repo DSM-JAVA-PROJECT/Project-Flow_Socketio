@@ -133,7 +133,7 @@ public class PlanSocketServiceImpl implements PlanSocketService {
                 .anyMatch(user2 -> user2.equals(user1.getEmail())));
 
         return receivers.stream()
-                .map(User::getId).map(ObjectId::toString)
+                .map(User::getEmail)
                 .collect(Collectors.toList());
     }
 

@@ -32,7 +32,7 @@ public class ChatSocketServiceImpl implements ChatSocketService {
                             .anyMatch(user2 -> user2.equals(user1.getEmail())));
 
                     List<String> receiverIds = receivers.stream()
-                            .map(User::getId).map(ObjectId::toString)
+                            .map(User::getEmail)
                             .collect(Collectors.toList());
 
                     ChatMessage message = ChatMessage.builder()
