@@ -20,4 +20,7 @@ public class ResignMessage {
 
     private String profileImage;
 
+    @Builder.Default
+    private Boolean isMine = true;
+
 }

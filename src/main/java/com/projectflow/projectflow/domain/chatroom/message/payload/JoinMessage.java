@@ -20,4 +20,7 @@ public class JoinMessage {
 
     private String profileImage;
 
+    @Builder.Default
+    private Boolean isMine = true;
+
 }
