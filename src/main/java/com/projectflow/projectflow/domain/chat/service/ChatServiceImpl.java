@@ -4,10 +4,7 @@ import com.mongodb.DBRef;
 import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.entity.ChatRepository;
 import com.projectflow.projectflow.domain.chat.exceptions.UserNotMessageOwnerException;
-import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
-import com.projectflow.projectflow.domain.chat.payload.ImageChatRequest;
-import com.projectflow.projectflow.domain.chat.payload.OldChatMessageListResponse;
-import com.projectflow.projectflow.domain.chat.payload.OldChatMessageResponse;
+import com.projectflow.projectflow.domain.chat.payload.*;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoomRepository;
 import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
@@ -83,6 +80,12 @@ public class ChatServiceImpl implements ChatService {
                 .map(chat -> buildResponse(chat, user));
 
         return new OldChatMessageListResponse(responses.getContent(), responses.getNumberOfElements(), responses.hasNext());
+    }
+
+    @Override
+    public void pinMessage(ChatPinRequest request, User user) {
+        validateChatRoom(request.getChatRoomId(), user);
+        chatRoomRepository.setPinChat(request.getChatRoomId(), request.getChatId());
     }
 
     private OldChatMessageResponse buildResponse(Chat chat, User user) {

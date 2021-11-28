@@ -1,6 +1,7 @@
 package com.projectflow.projectflow.domain.chat.service;
 
 import com.projectflow.projectflow.domain.chat.entity.Chat;
+import com.projectflow.projectflow.domain.chat.payload.ChatPinRequest;
 import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
 import com.projectflow.projectflow.domain.chat.payload.ImageChatRequest;
 import com.projectflow.projectflow.domain.chat.payload.OldChatMessageListResponse;
@@ -15,4 +16,7 @@ public interface ChatService {
     String removeMessage(String chatId);
 
     OldChatMessageListResponse getOldChatMessage(String chatRoomId, Pageable pageable);
+
+    void pinMessage(ChatPinRequest request, User user);
+
 }
