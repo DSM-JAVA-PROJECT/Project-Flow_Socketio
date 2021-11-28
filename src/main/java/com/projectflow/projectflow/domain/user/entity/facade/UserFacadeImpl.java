@@ -8,6 +8,8 @@ import org.bson.types.ObjectId;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Component
 public class UserFacadeImpl implements UserFacade {
@@ -25,5 +27,10 @@ public class UserFacadeImpl implements UserFacade {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> UserNotFoundException.EXCEPTION);
+    }
+
+    @Override
+    public List<User> getUserList(List<String> emails) {
+        return userRepository.findAllByEmailIn(emails);
     }
 }

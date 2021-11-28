@@ -47,14 +47,16 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     public void joinChatRoom(ParticipateChatRoomRequest request) {
-        User user = userFacade.getUserById(request.getUserId());
-
-        validateNotChatRoomMember(request.getChatRoomId(), user);
+        List<User> users = userFacade.getUserList(request.getUsers());
+        for (User user : users) {
+            validateNotChatRoomMember(request.getChatRoomId(), user);
+        }
+        User user = userFacade.getCurrentUser();
 
         ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(request.getChatRoomId()))
                 .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
 
-        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), chatRoom.getName() + " 채팅방에 참여했습니다.", MessageType.JOIN_CHATROOM, user.getProfileImage());
+        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), chatRoom.getName(), users.get(0).getName() + "님 외 " + users.size() + "명이 채팅방에 참가하셨습니다.", MessageType.JOIN_CHATROOM, user.getProfileImage());
         chatRoomRepository.joinChatRoom(request.getChatRoomId(), user);
     }
 
