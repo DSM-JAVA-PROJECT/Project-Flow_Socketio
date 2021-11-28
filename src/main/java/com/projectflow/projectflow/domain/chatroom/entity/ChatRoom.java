@@ -1,5 +1,6 @@
 package com.projectflow.projectflow.domain.chatroom.entity;
 
+import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.plan.entity.Plan;
 import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.*;
@@ -30,6 +31,9 @@ public class ChatRoom {
     private List<Plan> plans;
 
     private String profileImage;
+
+    @DBRef(lazy = true)
+    private Chat pinnedChat;
 
     @Builder
     private ChatRoom(String name, List<User> userIds, String profileImage) {
