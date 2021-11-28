@@ -4,10 +4,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.message.ChatSocketService;
-import com.projectflow.projectflow.domain.chat.payload.ChatPinRequest;
-import com.projectflow.projectflow.domain.chat.payload.ChatRequest;
-import com.projectflow.projectflow.domain.chat.payload.ImageChatRequest;
-import com.projectflow.projectflow.domain.chat.payload.OldChatMessageListResponse;
+import com.projectflow.projectflow.domain.chat.payload.*;
 import com.projectflow.projectflow.domain.chat.service.ChatService;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.annotations.SocketController;
@@ -43,6 +40,11 @@ public class ChatController {
     @GetMapping("/chat/{chatRoomId}")
     public OldChatMessageListResponse getOldMessage(@PathVariable String chatRoomId, Pageable pageable) {
         return chatService.getOldChatMessage(chatRoomId, pageable);
+    }
+
+    @GetMapping("/pin/{chatRoomId}")
+    public PinResponse getPinnedChat(@PathVariable String chatRoomId) {
+        return chatService.getPinnedChat(chatRoomId);
     }
 
     @SocketMapping(endpoint = "/chat/{chatId}", requestCls = ChatPinRequest.class)

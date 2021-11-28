@@ -83,6 +83,13 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public PinResponse getPinnedChat(String chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(chatRoomId))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+        return new PinResponse(chatRoom.getPinnedChat().getMessage());
+    }
+
+    @Override
     public void pinMessage(ChatPinRequest request, User user) {
         validateChatRoom(request.getChatRoomId(), user);
         chatRoomRepository.setPinChat(request.getChatRoomId(), request.getChatId());
