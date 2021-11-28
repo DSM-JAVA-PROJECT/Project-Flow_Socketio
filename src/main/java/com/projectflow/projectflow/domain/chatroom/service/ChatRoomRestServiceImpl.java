@@ -49,7 +49,10 @@ public class ChatRoomRestServiceImpl implements ChatRoomRestService {
 
         validateProjectMember(project);
 
-        List<ChatRoomResponse> responses = project.getChatRooms()
+        User user = authenticationFacade.getCurrentUser();
+        List<ChatRoom> chatRooms = chatRoomRepository.findChatRoomList(projectId, user);
+
+        List<ChatRoomResponse> responses = chatRooms
                 .stream().map(chatRoom -> ChatRoomResponse.builder()
                         .chatRoomImage(chatRoom.getProfileImage())
                         .chatRoomName(chatRoom.getName())

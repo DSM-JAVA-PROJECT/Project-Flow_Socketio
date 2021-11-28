@@ -1,10 +1,16 @@
 package com.projectflow.projectflow.domain.chatroom.entity;
 
 import com.projectflow.projectflow.domain.project.entity.Project;
+import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
+import com.projectflow.projectflow.domain.project.exceptions.ProjectNotFoundException;
 import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Update;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -13,6 +19,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class CustomChatRoomRepositoryImpl implements CustomChatRoomRepository {
 
     private final MongoTemplate mongoTemplate;
+    private final ProjectRepository projectRepository;
 
 
     // TODO: 2021-09-17 프로젝트 레포지토리로 이동하렴
@@ -43,6 +50,15 @@ public class CustomChatRoomRepositoryImpl implements CustomChatRoomRepository {
                         .andOperator(where("userIds.$id").is(user.getId()))),
                 new Update().pull("userIds", user),
                 ChatRoom.class);
+    }
+
+    @Override
+    public List<ChatRoom> findChatRoomList(String projectId, User user) {
+        Project project = projectRepository.findById(new ObjectId(projectId))
+                .orElseThrow(() -> ProjectNotFoundException.EXCEPTION);
+
+        return project.getChatRooms().stream().filter(chatRoom -> chatRoom.getUserIds().stream().anyMatch(user::equals))
+                .collect(Collectors.toList());
     }
 
 }
