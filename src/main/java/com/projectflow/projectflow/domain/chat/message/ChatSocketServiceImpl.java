@@ -2,7 +2,10 @@ package com.projectflow.projectflow.domain.chat.message;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import com.projectflow.projectflow.domain.chat.entity.Chat;
+import com.projectflow.projectflow.domain.chat.entity.ChatRepository;
 import com.projectflow.projectflow.domain.chat.message.payload.ChatMessage;
+import com.projectflow.projectflow.domain.chat.message.payload.PinMessage;
+import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.SocketProperty;
 import com.projectflow.projectflow.global.websocket.enums.MessageType;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class ChatSocketServiceImpl implements ChatSocketService {
 
     private final SocketAuthenticationFacade authenticationFacade;
+    private final ChatRepository chatRepository;
 
     @Override
     public void sendChatMessage(Chat chat, String chatRoomId, User user, SocketIOServer server) {
@@ -48,5 +52,16 @@ public class ChatSocketServiceImpl implements ChatSocketService {
                             .build();
                     client.sendEvent(SocketProperty.MESSAGE_KEY, message);
                 });
+    }
+
+    @Override
+    public void sendPinMessage(String chatRoomId, String chatId, SocketIOServer server) {
+        Chat chat = chatRepository.findById(new ObjectId(chatId))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+        var message = PinMessage.builder()
+                .content(chat.getMessage())
+                .build();
+        server.getRoomOperations(chatRoomId)
+                .sendEvent(SocketProperty.PIN_KET, message);
     }
 }
