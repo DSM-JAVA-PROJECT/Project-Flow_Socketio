@@ -1,5 +1,6 @@
 package com.projectflow.projectflow.domain.chatroom.entity;
 
+import com.mongodb.DBRef;
 import com.projectflow.projectflow.domain.project.entity.Project;
 import com.projectflow.projectflow.domain.project.entity.ProjectRepository;
 import com.projectflow.projectflow.domain.project.exceptions.ProjectNotFoundException;
@@ -7,11 +8,13 @@ import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.SetOperation;
 import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.data.mongodb.core.aggregation.AggregationUpdate.update;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -59,6 +62,13 @@ public class CustomChatRoomRepositoryImpl implements CustomChatRoomRepository {
 
         return project.getChatRooms().stream().filter(chatRoom -> chatRoom.getUserIds().stream().anyMatch(user::equals))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void setPinChat(String chatRoomId, String chatId) {
+        mongoTemplate.updateFirst(query(where("_id").is(chatRoomId)),
+                update().set(new SetOperation("pinnedChat", new DBRef("chat", new ObjectId(chatId))))
+                ChatRoom.class);
     }
 
 }

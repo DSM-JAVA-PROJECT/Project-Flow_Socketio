@@ -16,4 +16,6 @@ public interface CustomChatRoomRepository {
 
     List<ChatRoom> findChatRoomList(String projectId, User user);
 
+    void setPinChat(String chatRoomId, String chatId);
+
 }
