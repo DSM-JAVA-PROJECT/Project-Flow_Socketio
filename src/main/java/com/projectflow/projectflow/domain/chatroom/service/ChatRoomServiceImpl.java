@@ -13,6 +13,7 @@ import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.domain.user.entity.facade.UserFacade;
 import com.projectflow.projectflow.global.fcm.FcmFacade;
 import com.projectflow.projectflow.global.websocket.enums.MessageType;
+import com.projectflow.projectflow.global.websocket.security.SocketAuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -46,12 +47,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public void joinChatRoom(ParticipateChatRoomRequest request) {
+    public void joinChatRoom(ParticipateChatRoomRequest request, User user) {
         List<User> users = userFacade.getUserList(request.getUsers());
-        for (User user : users) {
-            validateNotChatRoomMember(request.getChatRoomId(), user);
+        for (User user1 : users) {
+            validateNotChatRoomMember(request.getChatRoomId(), user1);
         }
-        User user = userFacade.getCurrentUser();
 
         ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(request.getChatRoomId()))
                 .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);

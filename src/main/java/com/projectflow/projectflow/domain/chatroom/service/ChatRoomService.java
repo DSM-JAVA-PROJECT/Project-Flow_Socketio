@@ -7,7 +7,7 @@ import com.projectflow.projectflow.domain.user.entity.User;
 public interface ChatRoomService {
     void createChatRoom(CreateChatRoomRequest request, User user);
 
-    void joinChatRoom(ParticipateChatRoomRequest request);
+    void joinChatRoom(ParticipateChatRoomRequest request, User user);
 
     void resignChatRoom(String chatRoomId, User user);
 }

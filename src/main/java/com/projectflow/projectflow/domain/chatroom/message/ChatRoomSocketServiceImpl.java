@@ -22,10 +22,9 @@ public class ChatRoomSocketServiceImpl implements ChatRoomSocketService {
     private final UserFacade userFacade;
 
     @Override
-    public void joinChatRoom(String chatRoomId, List<String> userId, SocketIOClient client, SocketIOServer server) {
-        List<User> users = userFacade.getUserList(userId);
+    public void joinChatRoom(String chatRoomId, List<String> emails, SocketIOClient client, SocketIOServer server) {
+        List<User> users = userFacade.getUserList(emails);
         client.joinRoom(chatRoomId);
-
 
         List<JoinMessage> message = users.stream().map(user -> JoinMessage.builder()
                         .profileImage(user.getProfileImage())

@@ -23,23 +23,23 @@ public class FcmFacadeImpl implements FcmFacade {
 
     private static final String path = "google-services.json";
 
-    @PostConstruct
-    public void init() {
-        try {
-            GoogleCredentials googleCredentials = GoogleCredentials
-                    .fromStream(new ClassPathResource(path).getInputStream());
-            FirebaseOptions firebaseOptions = FirebaseOptions.builder()
-                    .setCredentials(googleCredentials)
-                    .build();
-
-            if (FirebaseApp.getApps().isEmpty()) {
-                FirebaseApp.initializeApp(firebaseOptions);
-                System.out.println("Initialized!");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    @PostConstruct
+//    public void init() {
+//        try {
+//            GoogleCredentials googleCredentials = GoogleCredentials
+//                    .fromStream(new ClassPathResource(path).getInputStream());
+//            FirebaseOptions firebaseOptions = FirebaseOptions.builder()
+//                    .setCredentials(googleCredentials)
+//                    .build();
+//
+//            if (FirebaseApp.getApps().isEmpty()) {
+//                FirebaseApp.initializeApp(firebaseOptions);
+//                System.out.println("Initialized!");
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void sendFcmMessageOnSocket(User sender, List<User> users, String title, String content, MessageType type, String profileImage) {

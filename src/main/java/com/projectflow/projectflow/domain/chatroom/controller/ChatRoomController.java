@@ -52,7 +52,8 @@ public class ChatRoomController {
 
     @SocketMapping(endpoint = "chatroom.participate", requestCls = ParticipateChatRoomRequest.class)
     public void participateChatRoom(ParticipateChatRoomRequest request, SocketIOClient client, SocketIOServer server) {
-        chatRoomService.joinChatRoom(request);
+        User user = authenticationFacade.getCurrentUser(client);
+        chatRoomService.joinChatRoom(request, user);
         socketService.joinChatRoom(request.getChatRoomId(), request.getUsers(), client, server);
     }
 
