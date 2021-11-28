@@ -51,6 +51,6 @@ public class ChatController {
     public void pinMessage(SocketIOServer server, SocketIOClient client, ChatPinRequest request) {
         User user = authenticationFacade.getCurrentUser(client);
         chatService.pinMessage(request, user);
-
+        socketService.sendPinMessage(request.getChatRoomId(), request.getChatId(), server);
     }
 }
