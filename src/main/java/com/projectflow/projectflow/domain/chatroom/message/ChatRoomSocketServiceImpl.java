@@ -12,6 +12,9 @@ import com.projectflow.projectflow.global.websocket.SocketProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class ChatRoomSocketServiceImpl implements ChatRoomSocketService {
@@ -19,16 +22,18 @@ public class ChatRoomSocketServiceImpl implements ChatRoomSocketService {
     private final UserFacade userFacade;
 
     @Override
-    public void joinChatRoom(String chatRoomId, String userId, SocketIOClient client, SocketIOServer server) {
-        User user = userFacade.getUserById(userId);
+    public void joinChatRoom(String chatRoomId, List<String> userId, SocketIOClient client, SocketIOServer server) {
+        List<User> users = userFacade.getUserList(userId);
         client.joinRoom(chatRoomId);
 
-        JoinMessage message = JoinMessage.builder()
-                .profileImage(user.getProfileImage())
-                .userId(user.getId().toString())
-                .userName(user.getName())
-                .userEmail(user.getEmail())
-                .build();
+
+        List<JoinMessage> message = users.stream().map(user -> JoinMessage.builder()
+                        .profileImage(user.getProfileImage())
+                        .userId(user.getId().toString())
+                        .userName(user.getName())
+                        .userEmail(user.getEmail())
+                        .build())
+                .collect(Collectors.toList());
 
         server.getRoomOperations(chatRoomId)
                 .sendEvent(SocketProperty.JOIN_KEY, message);
