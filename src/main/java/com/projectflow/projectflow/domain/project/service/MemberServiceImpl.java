@@ -44,9 +44,8 @@ public class MemberServiceImpl implements MemberService {
         return new ProjectMemberListResponse(chatRoom.getUserIds()
                 .stream()
                 .filter(projectUser -> project.getProjectUsers().stream()
-                        .anyMatch(member -> member.getUser().getEmail()
+                        .noneMatch(member -> member.getUser().getEmail()
                                 .equals(projectUser.getEmail())))
-                .filter(user -> user.getEmail().equals(authenticationFacade.getCurrentEmail()))
                 .map(this::buildMemberResponse)
                 .collect(Collectors.toList()));
     }
