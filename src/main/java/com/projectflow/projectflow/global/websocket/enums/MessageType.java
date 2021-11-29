@@ -8,5 +8,6 @@ public enum MessageType {
     JOIN_CHATROOM,
     RESIGN_CHATROOM,
     PICTURE,
-    MESSAGE
+    MESSAGE,
+    PIN
 }
