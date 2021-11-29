@@ -47,7 +47,7 @@ public class ChatController {
         return chatService.getPinnedChat(chatRoomId);
     }
 
-    @SocketMapping(endpoint = "/chat/{chatId}", requestCls = ChatPinRequest.class)
+    @SocketMapping(endpoint = "/pin", requestCls = ChatPinRequest.class)
     public void pinMessage(SocketIOServer server, SocketIOClient client, ChatPinRequest request) {
         User user = authenticationFacade.getCurrentUser(client);
         chatService.pinMessage(request, user);
