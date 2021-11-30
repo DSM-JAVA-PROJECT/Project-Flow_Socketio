@@ -5,6 +5,7 @@ import com.projectflow.projectflow.domain.chat.entity.Chat;
 import com.projectflow.projectflow.domain.chat.entity.ChatRepository;
 import com.projectflow.projectflow.domain.chat.message.payload.ChatMessage;
 import com.projectflow.projectflow.domain.chat.message.payload.PinMessage;
+import com.projectflow.projectflow.domain.chat.message.payload.RemovePinMessage;
 import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
 import com.projectflow.projectflow.domain.user.entity.User;
 import com.projectflow.projectflow.global.websocket.SocketProperty;
@@ -62,6 +63,14 @@ public class ChatSocketServiceImpl implements ChatSocketService {
                 .content(chat.getMessage())
                 .build();
         server.getRoomOperations(chatRoomId)
-                .sendEvent(SocketProperty.PIN_KET, message);
+                .sendEvent(SocketProperty.PIN_KEY, message);
+    }
+
+    @Override
+    public void sendRemovePinMessage(String chatRoomId, SocketIOServer server) {
+        var message = new RemovePinMessage();
+
+        server.getRoomOperations(chatRoomId)
+                .sendEvent(SocketProperty.REMOVE_KEY, message);
     }
 }

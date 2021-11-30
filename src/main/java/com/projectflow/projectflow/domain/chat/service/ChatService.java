@@ -16,6 +16,8 @@ public interface ChatService {
 
     PinResponse getPinnedChat(String chatRoomId);
 
+    void deletePinnedChat(String chatRoomId);
+
     void pinMessage(ChatPinRequest request, User user);
 
 }

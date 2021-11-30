@@ -12,6 +12,7 @@ import com.projectflow.projectflow.global.websocket.annotations.SocketMapping;
 import com.projectflow.projectflow.global.websocket.security.SocketAuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -45,6 +46,12 @@ public class ChatController {
     @GetMapping("/pin/{chatRoomId}")
     public PinResponse getPinnedChat(@PathVariable String chatRoomId) {
         return chatService.getPinnedChat(chatRoomId);
+    }
+
+    @DeleteMapping("/pin/{chatRoomId}")
+    public void removePin(@PathVariable String chatRoomId) {
+        chatService.deletePinnedChat(chatRoomId);
+
     }
 
     @SocketMapping(endpoint = "pin", requestCls = ChatPinRequest.class)

@@ -90,6 +90,15 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public void deletePinnedChat(String chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(chatRoomId))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+
+        chatRoom.setPinnedChat(null);
+        chatRoomRepository.save(chatRoom);
+    }
+
+    @Override
     public void pinMessage(ChatPinRequest request, User user) {
         validateChatRoom(request.getChatRoomId(), user);
         Chat chat = chatRepository.findById(new ObjectId(request.getChatId()))

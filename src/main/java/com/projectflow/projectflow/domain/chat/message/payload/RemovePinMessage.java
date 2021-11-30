@@ -6,14 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class PinMessage {
-
-    private MessageType type = MessageType.PIN;
-
-    private String content;
+public class RemovePinMessage {
 
 }

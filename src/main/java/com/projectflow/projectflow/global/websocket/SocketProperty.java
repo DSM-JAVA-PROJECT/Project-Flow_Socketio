@@ -22,6 +22,8 @@ public class SocketProperty {
 
     public static final String RESIGN_PLAN_KEY = "plan.resign";
 
-    public static final String PIN_KET = "pin";
+    public static final String PIN_KEY = "pin";
+
+    public static final String REMOVE_KEY = "pin.remove";
 
 }
