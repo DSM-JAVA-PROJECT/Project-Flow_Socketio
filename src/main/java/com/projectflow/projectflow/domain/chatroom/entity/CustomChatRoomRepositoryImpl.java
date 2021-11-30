@@ -8,7 +8,6 @@ import com.projectflow.projectflow.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.SetOperation;
 import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.List;
@@ -66,12 +65,10 @@ public class CustomChatRoomRepositoryImpl implements CustomChatRoomRepository {
 
     @Override
     public void setPinChat(String chatRoomId, String chatId) {
-        SetOperation setOperation = SetOperation.builder()
-                .set("pinnedChat")
-                .toValue(new DBRef("chat", new ObjectId(chatId)));
 
         mongoTemplate.updateFirst(query(where("_id").is(chatRoomId)),
-                update().set(setOperation),
+                update().set("pinnedChat")
+                        .toValueOf(new DBRef("chat", new ObjectId(chatId))),
                 ChatRoom.class);
     }
 
