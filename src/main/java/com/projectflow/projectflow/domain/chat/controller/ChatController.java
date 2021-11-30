@@ -48,10 +48,10 @@ public class ChatController {
         return chatService.getPinnedChat(chatRoomId);
     }
 
-    @DeleteMapping("/pin/{chatRoomId}")
-    public void removePin(@PathVariable String chatRoomId) {
-        chatService.deletePinnedChat(chatRoomId);
-
+    @SocketMapping(endpoint = "pin.remove", requestCls = RemovePinRequest.class)
+    public void removePin(RemovePinRequest request, SocketIOServer server) {
+        chatService.deletePinnedChat(request.getChatRoomId());
+        socketService.sendRemovePinMessage(request.getChatRoomId(), server);
     }
 
     @SocketMapping(endpoint = "pin", requestCls = ChatPinRequest.class)
