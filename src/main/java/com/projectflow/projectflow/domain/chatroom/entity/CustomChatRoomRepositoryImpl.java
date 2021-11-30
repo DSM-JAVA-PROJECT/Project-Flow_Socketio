@@ -63,13 +63,4 @@ public class CustomChatRoomRepositoryImpl implements CustomChatRoomRepository {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void setPinChat(String chatRoomId, String chatId) {
-
-        mongoTemplate.findAndModify(query(where("_id").is(chatRoomId)),
-                update().set("pinnedChat")
-                        .toValueOf(new DBRef("chat", new ObjectId(chatId))),
-                ChatRoom.class);
-    }
-
 }

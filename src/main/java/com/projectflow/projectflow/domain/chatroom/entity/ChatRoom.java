@@ -43,6 +43,10 @@ public class ChatRoom {
         this.profileImage = profileImage;
     }
 
+    public void setPinnedChat(Chat pinnedChat) {
+        this.pinnedChat = pinnedChat;
+    }
+
     public void updateChatRoomImage(String profileImage) {
         this.profileImage = profileImage;
     }

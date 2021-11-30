@@ -46,7 +46,7 @@ public class ChatServiceImpl implements ChatService {
     public Chat saveMessage(ChatRequest request, User user) {
         validateChatRoom(request.getChatRoomId(), user);
         ChatRoom chatRoom = findChatRoomById(request.getChatRoomId());
-        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), request.getMessage(), MessageType.MESSAGE,  user.getProfileImage());
+        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), request.getMessage(), MessageType.MESSAGE, user.getProfileImage());
         return chatRepository.save(buildChat(chatRoom, user, request.getMessage()));
     }
 
@@ -92,7 +92,12 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void pinMessage(ChatPinRequest request, User user) {
         validateChatRoom(request.getChatRoomId(), user);
-        chatRoomRepository.setPinChat(request.getChatRoomId(), request.getChatId());
+        Chat chat = chatRepository.findById(new ObjectId(request.getChatId()))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(request.getChatRoomId()))
+                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+        chatRoom.setPinnedChat(chat);
+        chatRoomRepository.save(chatRoom);
     }
 
     private OldChatMessageResponse buildResponse(Chat chat, User user) {
