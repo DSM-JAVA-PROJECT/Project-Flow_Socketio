@@ -8,4 +8,6 @@ public interface CustomPlanRepository {
     Plan joinPlan(String planId, User user);
 
     Plan findById(String planId);
+
+    void removePlan(String planId);
 }

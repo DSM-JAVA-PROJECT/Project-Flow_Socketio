@@ -2,6 +2,7 @@ package com.projectflow.projectflow.domain.plan.entity;
 
 import com.mongodb.client.result.UpdateResult;
 import com.projectflow.projectflow.domain.chatroom.entity.ChatRoom;
+import com.projectflow.projectflow.domain.chatroom.entity.ChatRoomRepository;
 import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundException;
 import com.projectflow.projectflow.domain.plan.exceptions.PlanNotFoundException;
 import com.projectflow.projectflow.domain.user.entity.User;
@@ -20,6 +21,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class CustomPlanRepositoryImpl implements CustomPlanRepository {
 
     private final MongoTemplate mongoTemplate;
+    private final ChatRoomRepository chatRoomRepository;
 
     @Override
     public Plan savePlan(String chatRoomId, Plan plan) {
@@ -68,5 +70,19 @@ public class CustomPlanRepositoryImpl implements CustomPlanRepository {
         return chatRoom.getPlans().stream().filter(plan -> plan.getId().toString().equals(planId))
                 .findFirst()
                 .orElseThrow(() -> PlanNotFoundException.EXCEPTION);
+    }
+
+    @Override
+    public void removePlan(String planId) {
+        ChatRoom chatRoom = mongoTemplate.findOne(query(where("plans.id").is(planId)),
+                ChatRoom.class);
+
+        if (chatRoom == null) {
+            throw ChatRoomNotFoundException.EXCEPTION;
+        }
+
+        chatRoom.getPlans().removeIf(plan -> plan.getId().toString().equals(planId));
+
+        chatRoomRepository.save(chatRoom);
     }
 }

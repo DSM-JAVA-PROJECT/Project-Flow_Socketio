@@ -8,6 +8,7 @@ import com.projectflow.projectflow.domain.chatroom.exceptions.ChatRoomNotFoundEx
 import com.projectflow.projectflow.domain.chatroom.exceptions.NotChatRoomMemberException;
 import com.projectflow.projectflow.domain.plan.entity.CustomPlanRepository;
 import com.projectflow.projectflow.domain.plan.entity.Plan;
+import com.projectflow.projectflow.domain.plan.entity.PlanUser;
 import com.projectflow.projectflow.domain.plan.exceptions.AlreadyPlanParticipateException;
 import com.projectflow.projectflow.domain.plan.exceptions.NotPlanMemberException;
 import com.projectflow.projectflow.domain.plan.exceptions.PlanNotFoundException;
@@ -15,11 +16,13 @@ import com.projectflow.projectflow.domain.plan.payload.CreatePlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.JoinPlanRequest;
 import com.projectflow.projectflow.domain.plan.payload.ResignPlanRequest;
 import com.projectflow.projectflow.domain.user.entity.User;
+import com.projectflow.projectflow.domain.user.entity.facade.UserFacade;
 import com.projectflow.projectflow.global.fcm.FcmFacade;
 import com.projectflow.projectflow.global.websocket.enums.MessageType;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +32,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 @RequiredArgsConstructor
 @Service
 public class PlanServiceImpl implements PlanService {
@@ -37,7 +43,9 @@ public class PlanServiceImpl implements PlanService {
     private final CustomPlanRepository planRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRepository chatRepository;
+    private final UserFacade userFacade;
     private final FcmFacade fcmFacade;
+    private final MongoTemplate mongoTemplate;
 
     @Transactional
     @Override
@@ -59,7 +67,7 @@ public class PlanServiceImpl implements PlanService {
         Chat unsavedChat = buildCreatePlanChat(chatRoom, plan, user);
         chatRepository.save(unsavedChat);
 
-        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), request.getPlanName() + " 일정을 추가했습니다.", MessageType.PLAN,  user.getProfileImage());
+        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), request.getPlanName() + " 일정을 추가했습니다.", MessageType.PLAN, user.getProfileImage());
 
         return plan;
     }
@@ -76,7 +84,7 @@ public class PlanServiceImpl implements PlanService {
 
         Chat unsavedChat = buildJoinPlanChat(chatRoom, plan, user);
         chatRepository.save(unsavedChat);
-        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), plan.getName() + " 일정에 참여했습니다.", MessageType.JOIN_PLAN,  user.getProfileImage());
+        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), plan.getName() + " 일정에 참여했습니다.", MessageType.JOIN_PLAN, user.getProfileImage());
 
         return planRepository.joinPlan(request.getPlanId(), user);
     }
@@ -84,8 +92,10 @@ public class PlanServiceImpl implements PlanService {
     @Transactional
     @Override
     public Plan resignPlan(ResignPlanRequest request, User user) {
-        ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(request.getChatRoomId()))
-                .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
+
+        ChatRoom chatRoom = mongoTemplate.findOne(query(where("plans.id").is(request.getPlanId())),
+                ChatRoom.class);
+        assert chatRoom != null;
 
         Plan plan = chatRoom.getPlans().stream()
                 .filter(plan1 -> plan1.getId().toString().equals(request.getPlanId()))
@@ -98,13 +108,27 @@ public class PlanServiceImpl implements PlanService {
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
         Chat unsavedChat = buildResignPlanChat(chatRoom, plan, user);
-        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), plan.getName() + " 일정에 탈퇴했습니다.", MessageType.RESIGN_PLAN,  user.getProfileImage());
+        fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), plan.getName() + " 일정에 탈퇴했습니다.", MessageType.RESIGN_PLAN, user.getProfileImage());
         chatRepository.save(unsavedChat);
 
         return savedChatRoom.getPlans().stream()
                 .filter(plan1 -> plan1.getId().toString().equals(request.getPlanId()))
                 .findFirst()
                 .orElseThrow(() -> PlanNotFoundException.EXCEPTION);
+    }
+
+    @Override
+    public void removePlan(String planId) {
+        User user = userFacade.getCurrentUser();
+        Plan plan = planRepository.findById(planId);
+
+        plan.getPlanUsers().stream()
+                .map(PlanUser::getUser)
+                .filter(user::equals)
+                .findFirst()
+                .orElseThrow(() -> NotPlanMemberException.EXCEPTION);
+
+        planRepository.removePlan(planId);
     }
 
     private Plan buildPlan(CreatePlanRequest request, List<User> users) {

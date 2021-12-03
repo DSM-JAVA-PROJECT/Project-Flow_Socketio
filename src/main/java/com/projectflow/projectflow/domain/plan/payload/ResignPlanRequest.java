@@ -12,9 +12,8 @@ import javax.validation.constraints.NotBlank;
 public class ResignPlanRequest {
 
     @NotBlank
-    private String chatRoomId;
-
-    @NotBlank
     private String planId;
+
+    private String chatRoomId;
 
 }

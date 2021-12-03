@@ -10,4 +10,5 @@ public interface PlanService {
     Plan createPlan(CreatePlanRequest request, User user);
     Plan joinPlan(JoinPlanRequest request, User user);
     Plan resignPlan(ResignPlanRequest request, User user);
+    void removePlan(String planId);
 }
