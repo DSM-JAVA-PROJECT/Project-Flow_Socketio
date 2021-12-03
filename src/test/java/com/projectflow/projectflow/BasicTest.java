@@ -42,7 +42,7 @@ public abstract class BasicTest {
 
     @BeforeEach
     void setUp() {
-        this.planRepository = new CustomPlanRepositoryImpl(mongoTemplate);
+        this.planRepository = new CustomPlanRepositoryImpl(mongoTemplate, chatRoomRepository);
         user = userRepository.save(
                 User.builder()
                         .email("email")
