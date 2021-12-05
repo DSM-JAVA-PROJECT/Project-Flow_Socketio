@@ -51,7 +51,12 @@ public class ChatSocketServiceImpl implements ChatSocketService {
                             .isMine(authenticationFacade.getCurrentUser(client).getId().equals(user.getId()))
                             .size(1)
                             .build();
-                    client.sendEvent(SocketProperty.MESSAGE_KEY, message);
+
+                    if (chat.getMessageType() == MessageType.MESSAGE) {
+                        client.sendEvent(SocketProperty.MESSAGE_KEY, message);
+                    } else {
+                        client.sendEvent(SocketProperty.IMAGE_KEY, message);
+                    }
                 });
     }
 

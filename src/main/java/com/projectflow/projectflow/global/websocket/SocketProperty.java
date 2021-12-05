@@ -8,6 +8,8 @@ public class SocketProperty {
 
     public static final String MESSAGE_KEY = "message";
 
+    public static final String IMAGE_KEY = "message.image";
+
     public static final String JOIN_KEY = "join";
 
     public static final String REJOIN_KEY = "rejoin";
