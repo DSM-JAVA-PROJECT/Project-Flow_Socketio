@@ -47,7 +47,7 @@ public class ChatServiceImpl implements ChatService {
         validateChatRoom(request.getChatRoomId(), user);
         ChatRoom chatRoom = findChatRoomById(request.getChatRoomId());
         fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), request.getMessage(), MessageType.MESSAGE, user.getProfileImage());
-        return chatRepository.save(buildChat(chatRoom, user, request.getMessage()));
+        return chatRepository.save(buildChat(MessageType.PICTURE, chatRoom, user, request.getMessage()));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ChatServiceImpl implements ChatService {
         validateChatRoom(request.getChatRoomId(), user);
         ChatRoom chatRoom = findChatRoomById(request.getChatRoomId());
         fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), "이미지가 전송되었습니다.", MessageType.PICTURE, user.getProfileImage());
-        return chatRepository.save(buildChat(chatRoom, user, request.getImageUrl()));
+        return chatRepository.save(buildChat(MessageType.PICTURE, chatRoom, user, request.getImageUrl()));
     }
 
     @Override
@@ -155,7 +155,7 @@ public class ChatServiceImpl implements ChatService {
                 .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
     }
 
-    private Chat buildChat(ChatRoom chatRoom, User user, String message) {
+    private Chat buildChat(MessageType type, ChatRoom chatRoom, User user, String message) {
         List<User> receivers = chatRoom.getUserIds();
         receivers.remove(user);
         return Chat.builder()
@@ -163,7 +163,7 @@ public class ChatServiceImpl implements ChatService {
                 .sender(user)
                 .chatRoom(chatRoom)
                 .message(message)
-                .messageType(MessageType.MESSAGE)
+                .messageType(type)
                 .build();
     }
 }
