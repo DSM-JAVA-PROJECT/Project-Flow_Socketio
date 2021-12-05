@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -86,7 +87,7 @@ public class ChatServiceImpl implements ChatService {
     public PinResponse getPinnedChat(String chatRoomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(new ObjectId(chatRoomId))
                 .orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION);
-        return new PinResponse(chatRoom.getPinnedChat().getMessage());
+        return new PinResponse(Optional.of(chatRoom.getPinnedChat()).orElseThrow(() -> ChatRoomNotFoundException.EXCEPTION).getMessage());
     }
 
     @Override
