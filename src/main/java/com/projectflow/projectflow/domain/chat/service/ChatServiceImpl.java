@@ -47,7 +47,7 @@ public class ChatServiceImpl implements ChatService {
         validateChatRoom(request.getChatRoomId(), user);
         ChatRoom chatRoom = findChatRoomById(request.getChatRoomId());
         fcmFacade.sendFcmMessageOnSocket(user, chatRoom.getUserIds(), user.getName(), request.getMessage(), MessageType.MESSAGE, user.getProfileImage());
-        return chatRepository.save(buildChat(MessageType.PICTURE, chatRoom, user, request.getMessage()));
+        return chatRepository.save(buildChat(MessageType.MESSAGE, chatRoom, user, request.getMessage()));
     }
 
     @Override
